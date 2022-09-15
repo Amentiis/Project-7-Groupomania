@@ -5,7 +5,6 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 router.post(express.json());
 router.post('/:id', auth ,commentCtrl.CreateComment)
-
 router.delete('/:id', auth ,commentCtrl.DeleteComment)
 
 
