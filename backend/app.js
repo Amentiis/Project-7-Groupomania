@@ -33,6 +33,7 @@ app.use('/api/post',postRoutes);
 app.use('/api/modify',modifyRoutes);
 app.use('/api/comment',commentRoutes);
 app.use('/images',express.static(path.join(__dirname,'images')));
+app.use('/images/profilepicture',express.static(path.join(__dirname,'images')));
 
 module.exports = app;
 

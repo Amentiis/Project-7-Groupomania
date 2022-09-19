@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs')
 
 exports.signup = (req,res,next)=>{
     bcrypt.hash(req.body.password, 10)
@@ -54,7 +55,8 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             lastname: user.lastname,
             firstname: user.firstname,
-            isAdministrator : user.isAdministrator
+            isAdministrator : user.isAdministrator,
+            iconurl : user.iconurl,
             
           });
         }
@@ -71,6 +73,7 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             lastname: user.lastname,
             firstname: user.firstname,
+            iconurl : user.iconurl, 
           });
         }
       }).catch(error => res.status(500).json({ error }));
@@ -102,3 +105,45 @@ exports.login = (req, res, next) => {
       }).catch(error => res.status(500).json({ error }));
       
   };
+
+
+
+  exports.ModifyPicture =  (req, res, next) => {
+    function isFile(){
+      if(!req.file){
+        return "";
+      }else{
+        return `${req.protocol}://${req.get('host')}/images/profilepicture/${req.file.filename}`
+      }
+    }
+    User.findOne({ _id: req.body._id})
+    .then(user => {
+      if ((user._id != req.auth.userId) && (req.auth.userId != '63178ba24527038ff945fee1')) {
+            res.status(401).json({message: 'Not authorized'});
+        } else {
+            if (user.iconurl){
+              console.log('1');
+              const filename = user.iconurl.split('/images/profilepicture')[1];
+              fs.unlink(`images/profilepicture/${filename}`, () => {
+                user.updateOne({ _id: req.body._id , iconurl: isFile()})
+                    .then(() => res.status(200).json({ iconurl : isFile()}))
+
+                    .catch(error => res.status(400).json({ error }));
+                   
+              });
+            }else{
+              console.log('2');
+              user.updateOne({ _id: req.body._id , iconurl: isFile()})
+              .then(() => res.status(200).json({ iconurl : isFile()}))
+                    .catch(error => res.status(400).json({ error }));
+                    res.status(200).json({
+                      iconurl : isFile(),
+                      
+                    });
+            }
+        }
+    })
+    .catch( error => {
+        res.status(500).json({ error });
+    });
+    };

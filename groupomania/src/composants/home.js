@@ -25,6 +25,7 @@ function Home_Panel() {
   const [rendered, setRendered] = useState(false);
   const [lastname, setlastname] = useState("");
   const [firstname, setfirstname] = useState("");
+  const [profile_picture, setprofile_picture] = useState("");
   const [postId, setpostId] = useState("");
   const [isAdministrator, setisAdministrator] = useState("");
   var [commentshow, setcommentshow] = useState("");
@@ -175,8 +176,8 @@ function Home_Panel() {
         .then(function (value) {
           setlastname(value.lastname);
           setfirstname(value.firstname);
+          setprofile_picture(value.iconurl);
           setisAdministrator(value.isAdministrator)
-          console.log('passage useeffect')
           refreshPostInPage();
           if(!sessionStorage.getItem('notifyOff') === true){
             if(lastname && firstname){
@@ -356,6 +357,7 @@ function Home_Panel() {
       console.log(data);
       var author_firstname = data.firstname;
       var author_lastname = data.lastname;  
+      var author_profile_picture = data.iconurl;  
 
         
     
@@ -372,7 +374,7 @@ function Home_Panel() {
 
       var profilpicture = document.createElement('img');
       profilpicture.classList.add('profil');
-      profilpicture.setAttribute('src',profil)
+      profilpicture.setAttribute('src',author_profile_picture)
       poster_information.appendChild(profilpicture);
 
       var nameAndDate = document.createElement('div');
@@ -405,7 +407,7 @@ function Home_Panel() {
               </a>
             </div>
             <form onSubmit={likeanddisliked} className="likeandcomment_container">
-            <button type="submit" id="test" className="button_icon_heart" >
+            <button type="submit" className="button_icon_heart" >
                 <FontAwesomeIcon className={(listOfLike.find(user => user === sessionStorage.getItem('userid')))? "icon_heart like" : "icon_heart"} icon={(listOfLike.find(user => user === sessionStorage.getItem('userid')))? faHeartsolid : faHeart}/>
                 <p className="numberoflikes">{numberOfLikes}</p>
               </button>
@@ -422,7 +424,7 @@ function Home_Panel() {
           <div>
             <p>{textOfThePost}</p>
           <form onSubmit={likeanddisliked} className="likeandcomment_container">
-            <button id="test" className="button_icon_heart" >
+            <button className="button_icon_heart" >
               <FontAwesomeIcon className={(listOfLike.find(user => user === sessionStorage.getItem('userid')))? "icon_heart like" : "icon_heart"} icon={(listOfLike.find(user => user === sessionStorage.getItem('userid')))? faHeartsolid : faHeart}/>
               <p className="numberoflikes">{numberOfLikes}</p>
             </button>
@@ -458,8 +460,6 @@ function Home_Panel() {
         // var author_commentary_lastname = allCommentary[singlecommentary].lastname;
         var author_commentary_userId = allCommentary[singlecommentary].userId;
         var commentary_date = allCommentary[singlecommentary].date;
-
-
         let data = await fetch("http://localhost:3000/api/auth/getall", {
         method: "POST",
         headers: {
@@ -479,7 +479,6 @@ function Home_Panel() {
       .then(function (data) {
         return data
       });
-      console.log(data);
       var author_commentary_firstname =  data.firstname;
       var author_commentary_lastname = data.lastname;
 
@@ -817,10 +816,10 @@ function Home_Panel() {
             <form className="panel_profil" onSubmit={PostChangeOnProfil}>
                 <FontAwesomeIcon icon={faXmark}className="exit_cross" onClick={hidepanelProfil}/>
                 <div className="container_change_profil_icon">
-                  <img className="profileImg" src="http://localhost:3001/static/media/profil.c1441085a8157ae7561f.gif" alt="" />
+                  <img id="profileImg" className="profileImg" src={profile_picture} alt="" />
                   <p id= "profile_firstname_lastname" className="profile_firstname_lastname">{firstname} {lastname}</p>
                   <div className="input_file_icon_container">
-                    <input className="file_input_icon" type="file" />
+                    <input className="file_input_icon" type="file" onChange={PostChangeProfilePicture}/>
                     <span id="addimage_text" className="addimage_text">
                       Changer de photo de profil
                     </span>
@@ -857,7 +856,6 @@ function Home_Panel() {
             </form>
           </div>
         </div>
-
         <div id="main_container" className="main_container">
           <div id ="loader_container" className="loader_container">
             <div className="article_container">
@@ -1122,6 +1120,37 @@ function PostChangeOnProfil (e){
   }
 
 
+}
+
+
+function PostChangeProfilePicture(x){
+  let data = new FormData();
+  var fileinputPicture =  x.target;
+  const image = fileinputPicture.files[0];
+
+  data.append('_id' , sessionStorage.getItem('userid'))
+  data.append('image', image);
+
+  fetch(`http://localhost:3000/api/auth/changeProfilePicture`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      'Authorization': "Bearer " + sessionStorage.getItem("token"),
+    },
+    body: data
+  })
+    .then(function (res) {
+      if (res.ok) {
+        succesnotifymodifyprofil();
+        refreshPostInPage();
+
+        return res.json();
+      }
+      errornotify();
+    })
+    .then(function (value) {
+     document.getElementById('profileImg').src = value.iconurl     
+    });
 }
 
 
