@@ -525,8 +525,6 @@ function Home_Panel() {
         );
       }
          
-
-
     }
     if(document.getElementById('.loader_container')){
       document.getElementById('.loader_container').remove();
