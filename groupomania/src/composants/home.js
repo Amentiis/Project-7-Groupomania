@@ -354,13 +354,10 @@ function Home_Panel() {
       .then(function (data) {
         return data
       });
-      console.log(data);
       var author_firstname = data.firstname;
       var author_lastname = data.lastname;  
       var author_profile_picture = data.iconurl;  
 
-        
-    
       var main_container = document.getElementById('main_container');
       var article_container = document.createElement('div');
       article_container.classList.add("article_container");
@@ -481,6 +478,7 @@ function Home_Panel() {
       });
       var author_commentary_firstname =  data.firstname;
       var author_commentary_lastname = data.lastname;
+      var author_commentary_profilepicture =  data.iconurl;
 
         var commentary = document.createElement('div');
         commentary.classList.add('commentary');
@@ -493,7 +491,7 @@ function Home_Panel() {
        
         var profile_icon = document.createElement('img');
         profile_icon.classList.add('profile_icon')
-        profile_icon.src = 'http://localhost:3001/static/media/profil.c1441085a8157ae7561f.gif';
+        profile_icon.src = author_commentary_profilepicture;
         author_information.appendChild(profile_icon)
         
         var authorAndDate = document.createElement('div')
@@ -997,7 +995,6 @@ function Home_Panel() {
     data.append('firstname' , firstname)
     data.append('lastname' , lastname)
     data.append('userId' , userId)
-    console.log(image)
     
     if (image && image !== ""){
       data.append('image', image);

@@ -122,7 +122,6 @@ exports.login = (req, res, next) => {
             res.status(401).json({message: 'Not authorized'});
         } else {
             if (user.iconurl){
-              console.log('1');
               const filename = user.iconurl.split('/images/profilepicture')[1];
               fs.unlink(`images/profilepicture/${filename}`, () => {
                 user.updateOne({ _id: req.body._id , iconurl: isFile()})
@@ -132,7 +131,6 @@ exports.login = (req, res, next) => {
                    
               });
             }else{
-              console.log('2');
               user.updateOne({ _id: req.body._id , iconurl: isFile()})
               .then(() => res.status(200).json({ iconurl : isFile()}))
                     .catch(error => res.status(400).json({ error }));
