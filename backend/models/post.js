@@ -1,4 +1,3 @@
-const { text } = require('@fortawesome/fontawesome-svg-core');
 const mongoose = require('mongoose');
 
 const postSchema = mongoose.Schema({
