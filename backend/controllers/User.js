@@ -61,3 +61,44 @@ exports.login = (req, res, next) => {
       }).catch(error => res.status(500).json({ error }));
       
   };
+
+  exports.getSpecifyUserAll = (req, res, next) => {
+    User.findOne({ _id: req.body._id })
+      .then(user => {
+        if (!user) {
+          return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+        }else{
+          res.status(200).json({
+            lastname: user.lastname,
+            firstname: user.firstname,
+          });
+        }
+      }).catch(error => res.status(500).json({ error }));
+      
+  };
+
+  exports.modifySpecifyUser = (req, res, next) => {
+    User.findOne({ _id: req.params.id })
+      .then(user => {
+        if (!user) {
+          return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+        }else{
+          bcrypt.compare(req.body.password, user.password)
+          .then(valid => {
+            if (!valid) {
+              return res.status(401).json({ error: 'Mot de passe incorrect !' });
+            }
+            User.updateOne({ _id: req.params.id },  
+              {
+                firstname : req.body.firstname,
+                lastname: req.body.lastname
+              })
+                .then(() => res.status(200).json({ message: 'Objet modifié !'}))
+                .catch(error => res.status(400).json({ error }));
+          })
+          .catch(error => res.status(500).json({ error }));
+
+              };
+      }).catch(error => res.status(500).json({ error }));
+      
+  };

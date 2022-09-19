@@ -8,7 +8,7 @@ const postRoutes = require('./routes/post');
 const modifyRoutes = require('./routes/modify');
 const commentRoutes = require('./routes/comment');
 
-mongoose.connect(`mongodb+srv://amentiis:alpine0753@cluster0.ab4tqtw.mongodb.net/Groupomania`,
+mongoose.connect(`mongodb+srv://amentiis:openclassroom@cluster0.ab4tqtw.mongodb.net/Groupomania`,
 
   { useNewUrlParser: true,
     useUnifiedTopology: true })
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-app.use(express.urlencoded())
+// app.use(express.urlencoded())
 app.use('/api/auth',userRoutes);
 app.use('/api/post',postRoutes);
 app.use('/api/modify',modifyRoutes);

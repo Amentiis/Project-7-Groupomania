@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <React.StrictMode>
+  <div>
     <ToastContainer 
        position="bottom-center"
        autoClose={3000}
@@ -21,7 +21,7 @@ root.render(
        draggable
        pauseOnHover={false}/>
     <App />
-  </React.StrictMode>
+  </div>
 );
 
 // If you want to start measuring performance in your app, pass a function

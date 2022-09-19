@@ -26,8 +26,8 @@ function Home_Panel() {
   const [lastname, setlastname] = useState("");
   const [firstname, setfirstname] = useState("");
   const [postId, setpostId] = useState("");
-  var [commentshow, setcommentshow] = useState("");
   const [isAdministrator, setisAdministrator] = useState("");
+  var [commentshow, setcommentshow] = useState("");
 
 
   const succesnotify = () => toast.success('Article posté !', {
@@ -87,6 +87,17 @@ function Home_Panel() {
     progress: undefined,
     });
 
+    const succesnotifymodifyprofil = () => toast.success('Modification effectué avec succès !', {
+      position: "bottom-right",
+      className : 'succes_notify',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+
 
   const errornotify = () => toast.error('Une erreur est survenu !', {
     position: "bottom-right",
@@ -144,7 +155,7 @@ function Home_Panel() {
   useEffect(() => {
     sessionStorage.removeItem("email");
     const userid = sessionStorage.getItem("userid");
-    if (rendered) {
+    if (!rendered) {
       fetch("http://localhost:3000/api/auth/get", {
         method: "POST",
         headers: {
@@ -165,6 +176,7 @@ function Home_Panel() {
           setlastname(value.lastname);
           setfirstname(value.firstname);
           setisAdministrator(value.isAdministrator)
+          console.log('passage useeffect')
           refreshPostInPage();
           if(!sessionStorage.getItem('notifyOff') === true){
             if(lastname && firstname){
@@ -182,8 +194,6 @@ function Home_Panel() {
             }
           }
         });
-  
-    } else if (!rendered) {
       setRendered(true);
     }
     // eslint-disable-next-line
@@ -310,11 +320,11 @@ function Home_Panel() {
   }
   }
 
-  function displayPostOnScreen(allposts){
+  async function displayPostOnScreen(allposts){
     allposts = allposts.reverse();
     for(let post in allposts){
-      var author_firstname = allposts[post].firstname;
-      var author_lastname = allposts[post].lastname;
+      // var author_firstname = allposts[post].firstname;
+      // var author_lastname = allposts[post].lastname;
       var author_id = allposts[post].userId;
       var textOfThePost = allposts[post].text;
       var image = allposts[post].imageUrl;
@@ -324,6 +334,31 @@ function Home_Panel() {
       var numberOfLikes = allposts[post].likes;
       var allCommentary = allposts[post].commentary_list
 
+       let data = await fetch("http://localhost:3000/api/auth/getall", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          'Authorization': "Bearer " + sessionStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          _id: author_id,
+        }),
+      })
+      .then(function (res) {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then(function (data) {
+        return data
+      });
+      console.log(data);
+      var author_firstname = data.firstname;
+      var author_lastname = data.lastname;  
+
+        
+    
       var main_container = document.getElementById('main_container');
       var article_container = document.createElement('div');
       article_container.classList.add("article_container");
@@ -345,7 +380,7 @@ function Home_Panel() {
       poster_information.appendChild(nameAndDate);
 
       var authorOfThePost = document.createElement('p');
-      authorOfThePost.innerHTML = `Poste de <span> ${author_firstname} ${author_lastname} <span>`
+      authorOfThePost.innerHTML = `Poste de <span>  ${author_lastname} ${author_firstname} <span>`
       nameAndDate.appendChild(authorOfThePost);
 
       var date = document.createElement('p');
@@ -419,10 +454,34 @@ function Home_Panel() {
       for(let singlecommentary in allCommentary){
         var commentary_Id = allCommentary[singlecommentary]._id;
         var commentary_text = allCommentary[singlecommentary].text;
-        var author_commentary_firstname = allCommentary[singlecommentary].firstname;
-        var author_commentary_lastname = allCommentary[singlecommentary].lastname;
+        // var author_commentary_firstname = allCommentary[singlecommentary].firstname;
+        // var author_commentary_lastname = allCommentary[singlecommentary].lastname;
         var author_commentary_userId = allCommentary[singlecommentary].userId;
         var commentary_date = allCommentary[singlecommentary].date;
+
+
+        let data = await fetch("http://localhost:3000/api/auth/getall", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          'Authorization': "Bearer " + sessionStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          _id: author_commentary_userId,
+        }),
+      })
+      .then(function (res) {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then(function (data) {
+        return data
+      });
+      console.log(data);
+      var author_commentary_firstname =  data.firstname;
+      var author_commentary_lastname = data.lastname;
 
         var commentary = document.createElement('div');
         commentary.classList.add('commentary');
@@ -444,7 +503,7 @@ function Home_Panel() {
 
         var author_name = document.createElement('p');
         author_name.classList.add("author_name");
-        author_name.innerHTML = `Poste de <span> ${author_commentary_firstname} ${author_commentary_lastname} <span>`;
+        author_name.innerHTML = `Poste de <span> ${author_commentary_lastname} ${author_commentary_firstname} <span>`;
         authorAndDate.appendChild(author_name);
 
         var commentary_date_element = document.createElement('p')
@@ -575,7 +634,7 @@ function Home_Panel() {
               Créer un nouveau post
             </button>
             <div className="container_name">
-              <p id="profile_button" className="profile">
+              <p id="profile_button" className="profile" onClick={showpanelProfil}>
                 <FontAwesomeIcon className="icon_profile" icon={faUser} />
                 {lastname} {firstname}
               </p>
@@ -755,6 +814,52 @@ function Home_Panel() {
             </form>
           </div>
         </div>
+        <div id="container_panel_profil" className="container_panel_profil">
+          <div id="panel_profil_block" className="panel_profil_block">
+            <form className="panel_profil" onSubmit={PostChangeOnProfil}>
+                <FontAwesomeIcon icon={faXmark}className="exit_cross" onClick={hidepanelProfil}/>
+                <div className="container_change_profil_icon">
+                  <img className="profileImg" src="http://localhost:3001/static/media/profil.c1441085a8157ae7561f.gif" alt="" />
+                  <p id= "profile_firstname_lastname" className="profile_firstname_lastname">{firstname} {lastname}</p>
+                  <div className="input_file_icon_container">
+                    <input className="file_input_icon" type="file" />
+                    <span id="addimage_text" className="addimage_text">
+                      Changer de photo de profil
+                    </span>
+                  </div>
+                </div>
+                <div className="container_change_personalinformation">
+                    <div className="container_change_firstname">
+                      <label className="label_firstname" htmlFor="firstname">Prénom</label>
+                      <input id="change_firstname" type="text" className="change_firstname" name="firstname" autoComplete="given-name"/>
+                    </div>
+                    <div className="container_change_lastname">
+                      <label className="label_lastname" htmlFor="lastname">Nom</label>
+                      <input id="change_lastname" type="text" className="change_lastname" name="lastname" autoComplete="family-name"/>
+                    </div>
+                    <div className="container_confirm_password">
+                      <label className="label_confirmpassword" htmlFor="confirmpassword">Mot de passe</label>
+                      <input id="confirmpassword" type="password" className="confirmpassword" name="confirmpassword" required  autoComplete="new-password"/>
+                    </div>
+                    {/* <div className="container_change_password">
+                      <div className="container_oldpassword">
+                        <label className="label_oldpassword" htmlFor="oldchange_password">Ancien mot de passe</label>
+                        <input type="text" className="change_oldpassword" name="oldchange_password" />
+                      </div>
+                      <div className="container_newpassword">
+                      <label className="label_newpassword" htmlFor="change_newpassword">Nouveau mot de passe</label>
+                      <input type="text" className="change_newpassword" name="change_newpassword" />
+                      </div>
+                      
+                    </div> */}
+                    <button className="button_apply">appliquer</button>
+                  </div>
+              <div className="footer_panel">
+              </div>
+            </form>
+          </div>
+        </div>
+
         <div id="main_container" className="main_container">
           <div id ="loader_container" className="loader_container">
             <div className="article_container">
@@ -981,6 +1086,47 @@ function Home_Panel() {
 }
 
 
+function PostChangeOnProfil (e){
+  e.preventDefault();
+  var changeLastname = document.getElementById('change_lastname').value;
+  var changeFirstname = document.getElementById('change_firstname').value;
+  var confirmpassword = document.getElementById('confirmpassword').value;
+  if (confirmpassword){
+    fetch(`http://localhost:3000/api/auth/change/${sessionStorage.getItem('userid')}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        lastname : changeLastname,
+        firstname : changeFirstname,
+        password : confirmpassword,
+      }),
+    })
+      .then(function (res) {
+        if (res.ok) {
+          succesnotifymodifyprofil();
+          //window.location.reload();
+          document.getElementById('profile_button').textContent = `${changeLastname} ${changeFirstname}`
+          document.getElementById('profile_firstname_lastname').textContent = `${changeLastname} ${changeFirstname}`
+          refreshPostInPage();
+          return res.json();
+        }
+        errornotify();
+      })
+      .then(function (value) {
+       
+      });
+  }else{
+    errornotify()
+  }
+
+
+}
+
+
   function fileAddToPanel(x){
     var fileinput =  x.target;
     var filename = fileinput.files[0].name;
@@ -1143,6 +1289,23 @@ function Home_Panel() {
       document.getElementById("container_panel_commentary").classList.add("container_panel_commentary_active");
     }
   }
+
+  function showpanelProfil() {
+    if (document.getElementById("container_panel_profil").classList.contains("container_panel_profil_active")){
+      document.getElementById("container_panel_profil").classList.remove("container_panel_profil_active");
+    } else {
+      document.getElementById("container_panel_profil").classList.add("container_panel_profil_active");
+    }
+  }
+
+  function hidepanelProfil() {
+    if (document.getElementById("container_panel_profil").classList.contains("container_panel_profil_active")){
+      document.getElementById("container_panel_profil").classList.remove("container_panel_profil_active");
+    }
+  }
+
+
+
   
 }
 
