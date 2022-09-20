@@ -106,6 +106,32 @@ exports.login = (req, res, next) => {
       
   };
 
+  exports.modifyUserPassword = (req, res, next) => {
+    User.findOne({ _id: req.params.id })
+      .then(user => {
+        if (!user) {
+          return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+        }else{
+          bcrypt.compare(req.body.oldpassword, user.password)
+            .then(valid => {
+              if (!valid) {
+                return res.status(401).json({ error: 'Mot de passe incorrect !' });
+              }
+              bcrypt.hash(req.body.newpassword, 10)
+              .then(hash =>{
+                  User.updateOne({ _id: req.params.id },{password: hash})
+                  .then(() => res.status(200).json({ message: 'Mot de passe modifié !'}))
+                  .catch(error => res.status(400).json({ error }));
+              })
+              .catch(error => res.status(500).json({error}))
+            })
+            .catch(error => res.status(500).json({ error }));
+            };
+      }).catch(error => res.status(500).json({ error }));
+      
+  };
+
+
 
 
   exports.ModifyPicture =  (req, res, next) => {

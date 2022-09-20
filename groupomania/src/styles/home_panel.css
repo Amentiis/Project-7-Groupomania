@@ -411,7 +411,7 @@ header{
   background-color: white;
   border-radius: 10px;
   width: 500px;
-  height: 480px;
+  height: 520px;
   margin: auto;
 }
 
@@ -446,10 +446,18 @@ header{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgb(217, 212, 212); 
+  background-color: #fd2d01; 
+  filter: drop-shadow(1px 1px 3px rgb(0, 0, 0, 25%));
   border-radius: 10px;
   padding: 10px;
   width: 220px;
+  transition: all 200ms;
+  color: white;
+}
+
+
+.input_file_icon_container:hover{
+  transform: scale(1.050);
 }
 
 .file_input_icon {
@@ -493,12 +501,28 @@ input::file-selector-button {
   bottom: 25%;
 }
 
+.label_oldpassword , .label_newpassword{
+  position: absolute;
+  left: 50px;
+  bottom: 25%;
+}
+
 .change_firstname , .change_lastname , .confirmpassword{
-  background-color: #d5d5d5;
+  /* background-color: #d5d5d5; */
+  background-color: white;
   filter: drop-shadow(1px 1px 3px rgb(0, 0, 0, 25%));
   height: 30px;
   border-radius: 10px;
   padding: 10px;
+}
+
+.change_oldpassword, .change_newpassword{
+  background-color: white;
+  filter: drop-shadow(1px 1px 3px rgb(0, 0, 0, 25%));
+  height: 30px;
+  border-radius: 10px;
+  padding: 10px;
+  margin-left: 200px;
 }
 
 .profile_firstname_lastname{
@@ -514,17 +538,81 @@ input::file-selector-button {
   filter: drop-shadow(1px 1px 3px rgb(0, 0, 0, 25%));
   width: 450px;
   height: 250px;
-  border-radius: 5px;
+  border-radius: 0px 5px 5px 5px;
+  margin-top: 38px;
 }
 
+.container_change_password{
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(243,244,246,1);
+  filter: drop-shadow(1px 1px 3px rgb(0, 0, 0, 25%));
+  width: 450px;
+  height: 180px;
+  border-radius: 0px 5px 5px 5px;
+  margin-top: 38px;
+  gap: 17px;
+}
+
+.menu {
+  position: absolute;
+  background-color: #fd2d01;
+  left: 25px;
+  top: 222px;
+  color: white;
+  padding: 5px;
+  border-radius: 7px 7px 0px 0px;
+}
+
+.menu ul{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  list-style-type: none;
+}
+.menu li{
+  cursor: pointer;
+  transition: 300ms all;
+}
+
+.menu li:hover{
+  color: black;
+}
+
+.clicked{
+  color: black;
+}
 
 .button_apply{
   padding: 10px;
-  border-radius: 5px;
-  background-color: #d5d5d5;
+  border-radius: 10px;
+  filter: drop-shadow(1px 1px 3px rgb(0, 0, 0, 25%));
+  background-color: rgba(243,244,246,1);
   cursor: pointer;
+  transition: 300ms all;
 }
 
+.button_apply_password{
+  padding: 10px;
+  border-radius: 10px;
+  filter: drop-shadow(1px 1px 3px rgb(0, 0, 0, 25%));
+  background-color: rgba(243,244,246,1);
+  cursor: pointer;
+  transition: 300ms all;
+}
+
+.button_apply_password:hover{
+  transform: scale(1.030);
+  background-color: #fd2d01; 
+  color: white;
+}
+
+.button_apply:hover{
+  transform: scale(1.030);
+  background-color: #fd2d01; 
+  color: white;
+}
 
 
 .main_container{

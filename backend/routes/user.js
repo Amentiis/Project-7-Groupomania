@@ -8,6 +8,7 @@ router.post('/login',userCtrl.login);
 router.post('/get',auth,userCtrl.getSpecifyUser);
 router.post('/getall',auth,userCtrl.getSpecifyUserAll);
 router.post('/change/:id', auth, userCtrl.modifySpecifyUser);
+router.post('/changepassword/:id', auth, userCtrl.modifyUserPassword);
 router.post('/changeProfilePicture', auth, multer , userCtrl.ModifyPicture);
 
 

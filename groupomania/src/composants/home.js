@@ -98,6 +98,28 @@ function Home_Panel() {
       progress: undefined,
       });
 
+    const succesnotifymodifypassword = () => toast.success('Mot de passe modifié , déconnexion', {
+      position: "bottom-right",
+      className : 'succes_notify',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+
+    const errornotifymodifypassword = () => toast.error('Mot de passe incorrect!', {
+      position: "bottom-right",
+      className : 'succes_notify',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+
 
   const errornotify = () => toast.error('Une erreur est survenu !', {
     position: "bottom-right",
@@ -811,8 +833,18 @@ function Home_Panel() {
         </div>
         <div id="container_panel_profil" className="container_panel_profil">
           <div id="panel_profil_block" className="panel_profil_block">
-            <form className="panel_profil" onSubmit={PostChangeOnProfil}>
+            <div className="panel_profil">
                 <FontAwesomeIcon icon={faXmark}className="exit_cross" onClick={hidepanelProfil}/>
+                <div className="menu">
+                  <ul>
+                    <li id="menu_personnaldata" className="clicked" onClick={menupersonnaldata}>
+                      Données personnelles
+                    </li>
+                    <li id="menu_password" onClick={menupassword}>
+                      Mot de passe
+                    </li>
+                  </ul>
+                </div>
                 <div className="container_change_profil_icon">
                   <img id="profileImg" className="profileImg" src={profile_picture} alt="" />
                   <p id= "profile_firstname_lastname" className="profile_firstname_lastname">{firstname} {lastname}</p>
@@ -823,7 +855,7 @@ function Home_Panel() {
                     </span>
                   </div>
                 </div>
-                <div className="container_change_personalinformation">
+                <form className="container_change_personalinformation" onSubmit={PostChangeOnProfil}>
                     <div className="container_change_firstname">
                       <label className="label_firstname" htmlFor="firstname">Prénom</label>
                       <input id="change_firstname" type="text" className="change_firstname" name="firstname" autoComplete="given-name"/>
@@ -836,22 +868,20 @@ function Home_Panel() {
                       <label className="label_confirmpassword" htmlFor="confirmpassword">Mot de passe</label>
                       <input id="confirmpassword" type="password" className="confirmpassword" name="confirmpassword" required  autoComplete="new-password"/>
                     </div>
-                    {/* <div className="container_change_password">
-                      <div className="container_oldpassword">
-                        <label className="label_oldpassword" htmlFor="oldchange_password">Ancien mot de passe</label>
-                        <input type="text" className="change_oldpassword" name="oldchange_password" />
-                      </div>
-                      <div className="container_newpassword">
-                      <label className="label_newpassword" htmlFor="change_newpassword">Nouveau mot de passe</label>
-                      <input type="text" className="change_newpassword" name="change_newpassword" />
-                      </div>
-                      
-                    </div> */}
-                    <button className="button_apply">appliquer</button>
-                  </div>
-              <div className="footer_panel">
-              </div>
-            </form>
+                    <button className="button_apply">Appliquer les modifications</button>
+                  </form>
+                  <form className="container_change_password" onSubmit={PostChangePassword}>
+                    <div className="container_oldpassword">
+                      <label className="label_oldpassword" htmlFor="oldchange_password" autocomplete="current-password">Mot de passe actuel</label>
+                      <input id="oldpassword" type="password" className="change_oldpassword" name="oldchange_password" />
+                    </div>
+                    <div className="container_newpassword">
+                    <label className="label_newpassword" htmlFor="change_newpassword" autocomplete="new-password">Nouveau mot de passe</label>
+                    <input id="newpassword" type="password" className="change_newpassword" name="change_newpassword" />
+                    </div>
+                    <button className="button_apply_password">Appliquer les modifications</button> 
+                  </form>
+            </div>
           </div>
         </div>
         <div id="main_container" className="main_container">
@@ -1120,6 +1150,40 @@ function PostChangeOnProfil (e){
 }
 
 
+function PostChangePassword(e){
+  e.preventDefault();
+  var newpassword = document.getElementById('newpassword').value
+  var oldpassword = document.getElementById('oldpassword').value
+
+  fetch(`http://localhost:3000/api/auth/changepassword/${sessionStorage.getItem('userid')}`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      'Authorization': "Bearer " + sessionStorage.getItem("token"),
+    },
+    body: JSON.stringify({
+      oldpassword : oldpassword,
+      newpassword : newpassword,
+    }),
+  })
+    .then(function (res) {
+      if (res.ok) {
+        succesnotifymodifypassword();
+        sessionStorage.clear();
+        setTimeout(function () {
+          window.location.reload();
+        }, 4000);
+        return res.json();
+      }
+      errornotifymodifypassword();
+    })
+    .then(function (value) {
+     
+    });
+}
+
+
 function PostChangeProfilePicture(x){
   let data = new FormData();
   var fileinputPicture =  x.target;
@@ -1344,6 +1408,25 @@ function hidepanelCommentary() {
         document.getElementById('publish_button').classList.remove('text_area_clicked');
       }
       document.getElementById("commentary_textarea").value = "";
+  }
+}
+
+function menupersonnaldata(x){
+  if(!(x.target.classList.contains('clicked'))){
+    x.target.classList.add('clicked')
+    document.getElementById('menu_password').classList.remove('clicked')
+    document.querySelector('.container_change_personalinformation').classList.remove('display_none')
+    document.querySelector('.container_change_password').classList.remove('display_flex')
+  }
+
+}
+
+function menupassword(x){
+  if(!(x.target.classList.contains('clicked'))){
+    x.target.classList.add('clicked')
+    document.getElementById('menu_personnaldata').classList.remove('clicked')
+    document.querySelector('.container_change_personalinformation').classList.add('display_none')
+    document.querySelector('.container_change_password').classList.add('display_flex')
   }
 }
 
