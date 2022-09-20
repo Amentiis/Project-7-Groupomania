@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom/client'
 import { useNavigate } from "react-router";
 import logo from "../assets/logo.svg";
 import React from "react";
-import profil from "../assets/profil.gif";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import openTrash from "../assets/trash-solid-open.svg"
@@ -142,6 +141,7 @@ function Home_Panel() {
       hidepanelModify();
       showOptionPanel_commentary()
       showOptionPanel();
+      hidepanelProfil();
     }
   }, []);
 
@@ -1124,30 +1124,31 @@ function PostChangeProfilePicture(x){
   let data = new FormData();
   var fileinputPicture =  x.target;
   const image = fileinputPicture.files[0];
-
-  data.append('_id' , sessionStorage.getItem('userid'))
-  data.append('image', image);
-
-  fetch(`http://localhost:3000/api/auth/changeProfilePicture`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      'Authorization': "Bearer " + sessionStorage.getItem("token"),
-    },
-    body: data
-  })
-    .then(function (res) {
-      if (res.ok) {
-        succesnotifymodifyprofil();
-        refreshPostInPage();
-
-        return res.json();
-      }
-      errornotify();
+  if(image){
+    data.append('_id' , sessionStorage.getItem('userid'))
+    data.append('image', image);
+  
+    fetch(`http://localhost:3000/api/auth/changeProfilePicture`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+      },
+      body: data
     })
-    .then(function (value) {
-     document.getElementById('profileImg').src = value.iconurl     
-    });
+      .then(function (res) {
+        if (res.ok) {
+          succesnotifymodifyprofil();
+          refreshPostInPage();
+  
+          return res.json();
+        }
+        errornotify();
+      })
+      .then(function (value) {
+       document.getElementById('profileImg').src = value.iconurl     
+      });
+  }
 }
 
 
