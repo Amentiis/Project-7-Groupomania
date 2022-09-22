@@ -357,6 +357,17 @@ function Home_Panel() {
       var numberOfLikes = allposts[post].likes;
       var allCommentary = allposts[post].commentary_list
 
+
+
+      function containvideo() {
+        var listofformat = ['mp4','webm','avi','mov','flv','mkv'];   
+        var imageformat = allposts[post].imageUrl;
+        if (imageformat.split('.')[1] === listofformat.find(format => format === imageformat.split('.')[1]))
+          return true
+          return false
+      }
+
+
        let data = await fetch("http://localhost:3000/api/auth/getall", {
         method: "POST",
         headers: {
@@ -421,9 +432,10 @@ function Home_Panel() {
           <div>
             <p>{textOfThePost}</p>
             <div className="image_container">
-              <a className="link" href={image} target='_blank' rel="noreferrer">
-              <img className="article_image" src={image} alt="" />
-              </a>
+            {!containvideo()? 
+            <a className="link" href={image} target='_blank' rel="noreferrer"> 
+            <img className="article_image" src={image} alt="" /> </a> 
+            : <video className="article_image" src={image} controls alt="" target='_blank'/>}
             </div>
             <form onSubmit={likeanddisliked} className="likeandcomment_container">
             <button type="submit" className="button_icon_heart" >
@@ -696,12 +708,7 @@ function Home_Panel() {
                   onChange={textareaIsClicked}
                   placeholder={placeholder_textarea}
                 ></textarea>
-                <img
-                  id="importedimage"
-                  className="importedimage"
-                  src=""
-                  alt=""
-                />
+                <img id="importedimage"className="importedimage"src="" alt=""/>
               </div>
               <FontAwesomeIcon
                 id="delete_file"
@@ -784,7 +791,7 @@ function Home_Panel() {
                     id="file_input_modify"
                     type="file"
                     className="file_input"
-                    onChange={fileAddToPanel2}
+                    onChange={fileAddToPanel3}
                   />
                   <span id="addimage_text_modify" className="addimage_text">
                     Ajouter une image
@@ -872,11 +879,11 @@ function Home_Panel() {
                   </form>
                   <form className="container_change_password" onSubmit={PostChangePassword}>
                     <div className="container_oldpassword">
-                      <label className="label_oldpassword" htmlFor="oldchange_password" autocomplete="current-password">Mot de passe actuel</label>
+                      <label className="label_oldpassword" htmlFor="oldchange_password" autoComplete="current-password">Mot de passe actuel</label>
                       <input id="oldpassword" type="password" className="change_oldpassword" name="oldchange_password" />
                     </div>
                     <div className="container_newpassword">
-                    <label className="label_newpassword" htmlFor="change_newpassword" autocomplete="new-password">Nouveau mot de passe</label>
+                    <label className="label_newpassword" htmlFor="change_newpassword" autoComplete="new-password">Nouveau mot de passe</label>
                     <input id="newpassword" type="password" className="change_newpassword" name="change_newpassword" />
                     </div>
                     <button className="button_apply_password">Appliquer les modifications</button> 
@@ -1221,8 +1228,38 @@ function PostChangeProfilePicture(x){
     var filename = fileinput.files[0].name;
     var filesize = fileinput.files[0].size;
     var image = document.getElementById('importedimage')
+    var video = document.getElementById('importedvideo')
     var [file] = fileinput.files;
-    image.src = URL.createObjectURL(file)
+
+    if ([file.type][0].split('/')[0] === 'video'){
+        if(!image){
+          video.src = URL.createObjectURL(file)
+          video.style.border = "solid 4px #fd2d01"
+          video.classList.add("display_block")
+        }else{
+          video = document.createElement('video')
+          video.classList.add('importedimage')
+          video.setAttribute('controls',"")
+          video.setAttribute('id',"importedvideo")
+          video.src = URL.createObjectURL(file)
+          video.classList.add("display_block")
+          image.parentNode.replaceChild(video, image)
+        }
+    }else{
+
+      if(!image){
+        image = document.createElement('img')
+        image.setAttribute('id','importedimage')
+        image.classList.add('importedimage')
+        video.parentNode.replaceChild(image, video)
+      }
+     
+      image.src = URL.createObjectURL(file)
+      image.style.border = "solid 4px #fd2d01"
+      image.classList.add("display_block")
+    }
+
+  
     document.getElementById('addimage_text').classList.add('display_none')
     document.getElementById('panel_post_block').classList.add('panel_post_block_extend')
     document.getElementById('post_textarea').classList.add('post_textarea_extended')
@@ -1230,40 +1267,107 @@ function PostChangeProfilePicture(x){
     document.getElementById('opentrashicon').classList.add('display_block')
     document.getElementById('delete_file').classList.add('display_block')
     document.getElementById('addimage_text').textContent ="";
-    image.style.border = "solid 4px #fd2d01"
-    image.classList.add("display_block")
     document.getElementById("file-name").textContent = filename; 
 	  document.getElementById("file-size").textContent = ((filesize/1024)).toFixed(1) + " KB";
   }
 
   function fileAddToPanel2(x){
-    if(!(x.target === "_blank")){
-      var fileinput =  x.target;
-      var filename = fileinput.files[0].name;
-      var filesize = fileinput.files[0].size;
-      var image = document.getElementById('importedimage_modify')
-      var [file] = fileinput.files;
-      image.src = URL.createObjectURL(file)
-      image.style.border = "solid 4px #fd2d01"
-      image.classList.add("display_block")
-    }else{
-      image = document.getElementById('importedimage_modify')
-      image.src = (x.getAttribute('href'));
-      image.style.border = "solid 4px #fd2d01"
-      image.classList.add("display_block")
-    }
-    
 
+
+    var listofformat = ['mp4','webm','avi','mov','flv','mkv'];   
+    var image = document.getElementById('importedimage_modify')
+    var video = document.getElementById('importedvideo_modify')
+
+    console.log(image);
+    console.log(video);
+    if(image && !video){
+      console.log("Panel Image");
+      if (x.src.split('.')[1] === listofformat.find(format => format === x.src.split('.')[1])){
+        console.log("Fichier vidéo");
+        video = document.createElement('video')
+        video.classList.add('importedimage')
+        video.setAttribute('controls',"")
+        video.setAttribute('id',"importedvideo_modify")
+        video.src = x.src
+        video.classList.add("display_block")
+        video.style.border = "solid 4px #fd2d01"
+        image.parentNode.replaceChild(video, image)
+      }else{
+        console.log("Image");
+        image.src = x.src;
+        image.style.border = "solid 4px #fd2d01"
+        image.classList.add("display_block")
+      }
+    }else{
+      console.log("Panel Vidéo");
+      if ((x.src.split('.')[1] === listofformat.find(format => format === x.src.split('.')[1]))){
+        console.log("Fichier vidéo");
+        video.src = x.src
+        video.style.border = "solid 4px #fd2d01"
+        video.classList.add("display_block")
+      }else{
+        console.log("Image");
+        image = document.createElement('img')
+        image.setAttribute('id','importedimage_modify')
+        image.classList.add('importedimage')
+        video.parentNode.replaceChild(image, video)
+        image.src = x.src;
+        image.style.border = "solid 4px #fd2d01"
+        image.classList.add("display_block")
+      }
+    }
+       
     document.getElementById('panel_modify_block').classList.add('panel_modify_block_extend')
     document.getElementById('modify_textarea').classList.add('post_textarea_extended')
     document.getElementById('container_file_modify').classList.add('display_none')
     document.getElementById('opentrashicon_modify').classList.add('display_block')
     document.getElementById('delete_file_modify').classList.add('display_block')
     document.getElementById('addimage_text_modify').textContent = "Remplacer l'image";
+}
 
-    document.getElementById("file-name_modify").textContent = filename? filename : ""; 
-	  document.getElementById("file-size_modify").textContent = filesize? (((filesize/1024)).toFixed(1) + " KB") : "";
+function fileAddToPanel3(x){
+  var fileinput =  x.target;
+  var image = document.getElementById('importedimage_modify')
+  var video = document.getElementById('importedvideo_modify')
+  var [file] = fileinput.files;
+
+  if ([file.type][0].split('/')[0] === 'video'){
+      if(!image){
+        video.src = URL.createObjectURL(file)
+        video.style.border = "solid 4px #fd2d01"
+        video.classList.add("display_block")
+      }else{
+        video = document.createElement('video')
+        video.classList.add('importedimage')
+        video.setAttribute('controls',"")
+        video.setAttribute('id',"importedvideo_modify")
+        video.src = URL.createObjectURL(file)
+        video.classList.add("display_block")
+        image.parentNode.replaceChild(video, image)
+      }
+  }else{
+
+    if(!image){
+      image = document.createElement('img')
+      image.setAttribute('id','importedimage_modify')
+      image.classList.add('importedimage')
+      video.parentNode.replaceChild(image, video)
+    }
+   
+    image.src = URL.createObjectURL(file)
+    image.style.border = "solid 4px #fd2d01"
+    image.classList.add("display_block")
   }
+
+
+  document.getElementById('panel_modify_block').classList.add('panel_modify_block_extend')
+  document.getElementById('modify_textarea').classList.add('post_textarea_extended')
+  document.getElementById('container_file_modify').classList.add('display_none')
+  document.getElementById('opentrashicon_modify').classList.add('display_block')
+  document.getElementById('delete_file_modify').classList.add('display_block')
+  document.getElementById('addimage_text_modify').textContent = "Remplacer l'image";
+}
+
 
 
   function textareaIsClicked(){
@@ -1342,9 +1446,12 @@ function PostChangeProfilePicture(x){
 }
 
   function showpanelModify(x){
+    var imageurlmodify;
     var  oldtext = x.target.closest(".article").querySelector('p').textContent
     document.getElementById('modify_textarea').value = oldtext;
-    var imageurlmodify = x.target.closest(".article").querySelector('.link');
+    if(x.target.closest(".article").querySelector('.article_image')){
+      imageurlmodify = x.target.closest(".article").querySelector('.article_image');
+    }
     setpostId((x.target.closest(".article_container").dataset.id));
     if (x.target.closest(".article").querySelector('.image_container')){
       fileAddToPanel2(imageurlmodify);
@@ -1436,7 +1543,7 @@ function resetFile(){
   const fileinput = document.getElementById('file_input');
   fileinput.value = "";
   document.getElementById('addimage_text').textContent ="Ajouter une image";
-  document.getElementById('importedimage').style.border = ""
+  
   document.getElementById("file-name").textContent = "";
   document.getElementById("file-size").textContent = "";
   document.getElementById('addimage_text').classList.remove('display_none');
@@ -1446,16 +1553,37 @@ function resetFile(){
   document.getElementById('delete_file').classList.remove('display_block');
   document.getElementById('panel_post_block').classList.remove('panel_post_block_extend')
   document.getElementById('post_textarea').classList.remove('post_textarea_extended')
-  document.getElementById('importedimage').src = ""
-  document.getElementById('importedimage').classList.remove("display_block")
+  if(document.getElementById('importedimage')){
+    document.getElementById('importedimage').src = ""
+    document.getElementById('importedimage').classList.remove("display_block")
+    document.getElementById('importedimage').style.border = ""
+  }else{
+    document.getElementById('importedvideo').src = ""
+    document.getElementById('importedvideo').classList.remove("display_block")
+    document.getElementById('importedvideo').style.border = ""
+  }
+ 
 }
 
 function resetFile2(){
+
+ 
+  if(document.getElementById('importedimage_modify')){
+    document.getElementById('importedimage_modify').src = ""
+    document.getElementById('importedimage_modify').classList.remove("display_block")
+    document.getElementById('importedimage_modify').style.border = ""
+  }else{
+    document.getElementById('importedvideo_modify').src = ""
+    document.getElementById('importedvideo_modify').classList.remove("display_block")
+    document.getElementById('importedvideo_modify').style.border = ""
+  }
+
+  
   const fileinput = document.getElementById('file_input');
   fileinput.value = "";
   document.getElementById('addimage_text_modify').textContent ="Ajouter une image";
   document.getElementById("file_input_modify").value = ""
-  document.getElementById('importedimage_modify').style.border = ""
+
   document.getElementById("file-name_modify").textContent = "";
   document.getElementById("file-size_modify").textContent = "";
   document.getElementById('addimage_text_modify').classList.remove('display_none');
@@ -1464,8 +1592,7 @@ function resetFile2(){
   document.getElementById('delete_file_modify').classList.remove('display_block');
   document.getElementById('panel_modify_block').classList.remove('panel_modify_block_extend')
   document.getElementById('modify_textarea').classList.remove('post_textarea_extended')
-  document.getElementById('importedimage_modify').src = ""
-  document.getElementById('importedimage_modify').classList.remove("display_block")
+
 
 }
 
