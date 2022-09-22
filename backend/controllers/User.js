@@ -73,7 +73,8 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             lastname: user.lastname,
             firstname: user.firstname,
-            iconurl : user.iconurl, 
+            iconurl : user.iconurl,
+            isadministrator : user.isAdministrator, 
           });
         }
       }).catch(error => res.status(500).json({ error }));

@@ -24,9 +24,9 @@ function Home_Panel() {
   const [rendered, setRendered] = useState(false);
   const [lastname, setlastname] = useState("");
   const [firstname, setfirstname] = useState("");
+  const [isAdministrator, setisAdministrator] = useState(false);
   const [profile_picture, setprofile_picture] = useState("");
   const [postId, setpostId] = useState("");
-  const [isAdministrator, setisAdministrator] = useState("");
   var [commentshow, setcommentshow] = useState("");
 
 
@@ -168,12 +168,7 @@ function Home_Panel() {
   }, []);
 
 
-  useEffect(() => {
-    document.addEventListener("keydown", escFunction, false);
-    return () => {
-      document.removeEventListener("keydown", escFunction, false);
-    };
-  },);
+
 
   useEffect(() => {
     localStorage.removeItem("email");
@@ -200,7 +195,8 @@ function Home_Panel() {
           setfirstname(value.firstname);
           setprofile_picture(value.iconurl);
           setisAdministrator(value.isAdministrator)
-          refreshPostInPage();
+          refreshPostInPage(value.isAdministrator);
+          
           if(!localStorage.getItem('notifyOff') === true){
             if(lastname && firstname){
               localStorage.setItem('notifyOff', true);
@@ -219,9 +215,16 @@ function Home_Panel() {
         });
       setRendered(true);
     }
+    
     // eslint-disable-next-line
-  }, [rendered,lastname,firstname]);
+  }, [rendered,lastname,firstname,profile_picture]);
 
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction, false);
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+    };
+  },);
 
   function OptionPanel(props) {
     const itsYourPost = props.itsYourPost;
@@ -343,11 +346,9 @@ function Home_Panel() {
   }
   }
 
-  async function displayPostOnScreen(allposts){
+  async function displayPostOnScreen(allposts,Administrator){
     allposts = allposts.reverse();
     for(let post in allposts){
-      // var author_firstname = allposts[post].firstname;
-      // var author_lastname = allposts[post].lastname;
       var author_id = allposts[post].userId;
       var textOfThePost = allposts[post].text;
       var image = allposts[post].imageUrl;
@@ -356,8 +357,6 @@ function Home_Panel() {
       var listOfLike = allposts[post].usersLiked;
       var numberOfLikes = allposts[post].likes;
       var allCommentary = allposts[post].commentary_list
-
-
 
       function containvideo() {
         var listofformat = ['mp4','webm','avi','mov','flv','mkv'];   
@@ -390,6 +389,7 @@ function Home_Panel() {
       var author_firstname = data.firstname;
       var author_lastname = data.lastname;  
       var author_profile_picture = data.iconurl;  
+      var author_profile_isAdministrator = data.isadministrator;
 
       var main_container = document.getElementById('main_container');
       var article_container = document.createElement('div');
@@ -412,7 +412,7 @@ function Home_Panel() {
       poster_information.appendChild(nameAndDate);
 
       var authorOfThePost = document.createElement('p');
-      authorOfThePost.innerHTML = `Poste de <span>  ${author_lastname} ${author_firstname} <span>`
+      authorOfThePost.innerHTML = author_profile_isAdministrator? `Poste de <span>  ${author_lastname} ${author_firstname} <i class="fa-solid fa-star"></i> <span> `  : `Poste de <span>  ${author_lastname} ${author_firstname} <span>`
       nameAndDate.appendChild(authorOfThePost);
 
       var date = document.createElement('p');
@@ -446,7 +446,7 @@ function Home_Panel() {
                 <FontAwesomeIcon className="icon_comment" icon={faComments}/>
                 <button type="button">Commentaire</button>
               </div>
-              <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator)} />
+              <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator || Administrator)} />
               </form>
           </div>
         );
@@ -463,7 +463,7 @@ function Home_Panel() {
               <FontAwesomeIcon className="icon_comment" icon={faComments}/>
               <button type="button">Commentaire</button>
             </div>
-            <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator)} />
+            <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator || Administrator)} />
            </form>
         </div>
         );
@@ -625,8 +625,8 @@ function Home_Panel() {
 
 
 
-  function refreshPostInPage(){
-    fetch("http://localhost:3000/api/post", {
+  async function refreshPostInPage(value){
+    await fetch("http://localhost:3000/api/post", {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -644,7 +644,7 @@ function Home_Panel() {
         main_container.classList.add('main_container')
         main_container.setAttribute('id','main_container');
         document.getElementById('main').appendChild(main_container)
-        displayPostOnScreen(allposts);
+        displayPostOnScreen(allposts,value);
       })
   }
   const navigate = useNavigate();
