@@ -2,10 +2,10 @@ import { Navigate,useLocation } from "react-router-dom";
 
 import Login from "../pages/Login";
 const ProtectedLogin = () => {
-  const isLoggedIn = window.sessionStorage.getItem('isLoggedIn');
+  const isLoggedIn = window.localStorage.getItem('isLoggedIn');
   const location = useLocation();
-  const userid = window.sessionStorage.getItem('userid');
-  const token = window.sessionStorage.getItem('token');
+  const userid = window.localStorage.getItem('userid');
+  const token = window.localStorage.getItem('token');
 
 
   if(isLoggedIn && userid && token){

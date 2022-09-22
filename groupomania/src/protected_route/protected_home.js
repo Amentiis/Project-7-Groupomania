@@ -3,9 +3,9 @@ import Home from "../pages/Home"
 import { Navigate,useLocation } from "react-router-dom";
 const Protected_home = () => {
   
-  const isLoggedIn = window.sessionStorage.getItem('isLoggedIn');
-  const userid = window.sessionStorage.getItem('userid');
-  const token = window.sessionStorage.getItem('token');
+  const isLoggedIn = window.localStorage.getItem('isLoggedIn');
+  const userid = window.localStorage.getItem('userid');
+  const token = window.localStorage.getItem('token');
   const location = useLocation();
 
   if(isLoggedIn && userid && token){

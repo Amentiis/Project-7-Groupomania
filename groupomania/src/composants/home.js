@@ -176,15 +176,15 @@ function Home_Panel() {
   },);
 
   useEffect(() => {
-    sessionStorage.removeItem("email");
-    const userid = sessionStorage.getItem("userid");
+    localStorage.removeItem("email");
+    const userid = localStorage.getItem("userid");
     if (!rendered) {
       fetch("http://localhost:3000/api/auth/get", {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          'Authorization': "Bearer " + sessionStorage.getItem("token"),
+          'Authorization': "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify({
           _id: userid,
@@ -201,9 +201,9 @@ function Home_Panel() {
           setprofile_picture(value.iconurl);
           setisAdministrator(value.isAdministrator)
           refreshPostInPage();
-          if(!sessionStorage.getItem('notifyOff') === true){
+          if(!localStorage.getItem('notifyOff') === true){
             if(lastname && firstname){
-              sessionStorage.setItem('notifyOff', true);
+              localStorage.setItem('notifyOff', true);
               toast.success(`👋 Bienvenue ${lastname} ${firstname} `, {
                 position: "bottom-right",
                 className : 'welcomenotify', 
@@ -362,7 +362,7 @@ function Home_Panel() {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          'Authorization': "Bearer " + sessionStorage.getItem("token"),
+          'Authorization': "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify({
           _id: author_id,
@@ -427,14 +427,14 @@ function Home_Panel() {
             </div>
             <form onSubmit={likeanddisliked} className="likeandcomment_container">
             <button type="submit" className="button_icon_heart" >
-                <FontAwesomeIcon className={(listOfLike.find(user => user === sessionStorage.getItem('userid')))? "icon_heart like" : "icon_heart"} icon={(listOfLike.find(user => user === sessionStorage.getItem('userid')))? faHeartsolid : faHeart}/>
+                <FontAwesomeIcon className={(listOfLike.find(user => user === localStorage.getItem('userid')))? "icon_heart like" : "icon_heart"} icon={(listOfLike.find(user => user === localStorage.getItem('userid')))? faHeartsolid : faHeart}/>
                 <p className="numberoflikes">{numberOfLikes}</p>
               </button>
               <div className="comment" onClick={openAndCloseCommentary}>
                 <FontAwesomeIcon className="icon_comment" icon={faComments}/>
                 <button type="button">Commentaire</button>
               </div>
-              <OptionPanel itsYourPost={((author_id === sessionStorage.getItem('userid')) || isAdministrator)} />
+              <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator)} />
               </form>
           </div>
         );
@@ -444,14 +444,14 @@ function Home_Panel() {
             <p>{textOfThePost}</p>
           <form onSubmit={likeanddisliked} className="likeandcomment_container">
             <button className="button_icon_heart" >
-              <FontAwesomeIcon className={(listOfLike.find(user => user === sessionStorage.getItem('userid')))? "icon_heart like" : "icon_heart"} icon={(listOfLike.find(user => user === sessionStorage.getItem('userid')))? faHeartsolid : faHeart}/>
+              <FontAwesomeIcon className={(listOfLike.find(user => user === localStorage.getItem('userid')))? "icon_heart like" : "icon_heart"} icon={(listOfLike.find(user => user === localStorage.getItem('userid')))? faHeartsolid : faHeart}/>
               <p className="numberoflikes">{numberOfLikes}</p>
             </button>
             <div className="comment" onClick={openAndCloseCommentary}>
               <FontAwesomeIcon className="icon_comment" icon={faComments}/>
               <button type="button">Commentaire</button>
             </div>
-            <OptionPanel itsYourPost={((author_id === sessionStorage.getItem('userid')) || isAdministrator)} />
+            <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator)} />
            </form>
         </div>
         );
@@ -484,7 +484,7 @@ function Home_Panel() {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          'Authorization': "Bearer " + sessionStorage.getItem("token"),
+          'Authorization': "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify({
           _id: author_commentary_userId,
@@ -540,7 +540,7 @@ function Home_Panel() {
 
         const container_commentary_option = ReactDOM.createRoot(container_render_commentary)
         container_commentary_option.render(
-          <OptionPanelCommentary itsYourComment={((author_commentary_userId === sessionStorage.getItem('userid')) || isAdministrator || ( author_id === sessionStorage.getItem('userid')))} />
+          <OptionPanelCommentary itsYourComment={((author_commentary_userId === localStorage.getItem('userid')) || isAdministrator || ( author_id === localStorage.getItem('userid')))} />
         );
       }
          
@@ -570,11 +570,11 @@ function Home_Panel() {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            'Authorization': "Bearer " + sessionStorage.getItem("token"),
+            'Authorization': "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify({
             like:  0,
-            userId : sessionStorage.getItem('userid'),
+            userId : localStorage.getItem('userid'),
           }),
           })
           .then(function (res) {
@@ -594,11 +594,11 @@ function Home_Panel() {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            'Authorization': "Bearer " + sessionStorage.getItem("token"),
+            'Authorization': "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify({
             like:  1,
-            userId : sessionStorage.getItem('userid'),
+            userId : localStorage.getItem('userid'),
           }),
           })
           .then(function (res) {
@@ -618,7 +618,7 @@ function Home_Panel() {
       method: "GET",
       headers: {
         Accept: "application/json",
-        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+        'Authorization': "Bearer " + localStorage.getItem("token"),
       },
     })
       .then(function (res) {
@@ -937,7 +937,7 @@ function Home_Panel() {
   );
 
   function returntologinpage() {
-    sessionStorage.clear();
+    localStorage.clear();
     navigate("/login");
   }
 
@@ -960,7 +960,7 @@ function Home_Panel() {
         method: "POST",
         headers: {
           Accept: "application/json",
-          'Authorization': "Bearer " + sessionStorage.getItem("token"),
+          'Authorization': "Bearer " + localStorage.getItem("token"),
         },
         body: data,
       })
@@ -981,7 +981,7 @@ function Home_Panel() {
   function sendCommentary (e){
     e.preventDefault();
     const textareavalue = document.getElementById('commentary_textarea').value;
-    const userId = sessionStorage.getItem('userid')
+    const userId = localStorage.getItem('userid')
 
     
         fetch(`http://localhost:3000/api/comment/${postId}`, {
@@ -989,7 +989,7 @@ function Home_Panel() {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          'Authorization': "Bearer " + sessionStorage.getItem("token"),
+          'Authorization': "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify({
           text: textareavalue,
@@ -1020,7 +1020,7 @@ function Home_Panel() {
     const textareavalue = document.getElementById('modify_textarea').value;
     const fileinput = document.getElementById('file_input_modify');
     const image = fileinput.files[0];
-    const userId = sessionStorage.getItem('userid')
+    const userId = localStorage.getItem('userid')
     data.append('text', textareavalue);
     data.append('firstname' , firstname)
     data.append('lastname' , lastname)
@@ -1033,7 +1033,7 @@ function Home_Panel() {
         method: "PUT",
         headers: {
           Accept: "application/json",
-          'Authorization': "Bearer " + sessionStorage.getItem("token"),
+          'Authorization': "Bearer " + localStorage.getItem("token"),
         },
         body: data,
       })
@@ -1060,7 +1060,7 @@ function Home_Panel() {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          'Authorization': "Bearer " + sessionStorage.getItem("token"),
+          'Authorization': "Bearer " + localStorage.getItem("token"),
         },
       })
         .then(function (res) {
@@ -1079,7 +1079,7 @@ function Home_Panel() {
 
   function deleteComment (e){
     e.preventDefault();
-    const userId = sessionStorage.getItem('userid')
+    const userId = localStorage.getItem('userid')
     var commentIddelete = (e.target.closest('.commentary').dataset.id)
     var postIddelete = (e.target.closest('.article_container').dataset.id);
 
@@ -1088,7 +1088,7 @@ function Home_Panel() {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      'Authorization': "Bearer " + sessionStorage.getItem("token"),
+      'Authorization': "Bearer " + localStorage.getItem("token"),
     },
     body: JSON.stringify({
       commentId: commentIddelete,
@@ -1115,12 +1115,12 @@ function PostChangeOnProfil (e){
   var changeFirstname = document.getElementById('change_firstname').value;
   var confirmpassword = document.getElementById('confirmpassword').value;
   if (confirmpassword){
-    fetch(`http://localhost:3000/api/auth/change/${sessionStorage.getItem('userid')}`, {
+    fetch(`http://localhost:3000/api/auth/change/${localStorage.getItem('userid')}`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+        'Authorization': "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
         lastname : changeLastname,
@@ -1155,12 +1155,12 @@ function PostChangePassword(e){
   var newpassword = document.getElementById('newpassword').value
   var oldpassword = document.getElementById('oldpassword').value
 
-  fetch(`http://localhost:3000/api/auth/changepassword/${sessionStorage.getItem('userid')}`, {
+  fetch(`http://localhost:3000/api/auth/changepassword/${localStorage.getItem('userid')}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      'Authorization': "Bearer " + sessionStorage.getItem("token"),
+      'Authorization': "Bearer " + localStorage.getItem("token"),
     },
     body: JSON.stringify({
       oldpassword : oldpassword,
@@ -1170,7 +1170,7 @@ function PostChangePassword(e){
     .then(function (res) {
       if (res.ok) {
         succesnotifymodifypassword();
-        sessionStorage.clear();
+        localStorage.clear();
         setTimeout(function () {
           window.location.reload();
         }, 4000);
@@ -1189,14 +1189,14 @@ function PostChangeProfilePicture(x){
   var fileinputPicture =  x.target;
   const image = fileinputPicture.files[0];
   if(image){
-    data.append('_id' , sessionStorage.getItem('userid'))
+    data.append('_id' , localStorage.getItem('userid'))
     data.append('image', image);
   
     fetch(`http://localhost:3000/api/auth/changeProfilePicture`, {
       method: "POST",
       headers: {
         Accept: "application/json",
-        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+        'Authorization': "Bearer " + localStorage.getItem("token"),
       },
       body: data
     })

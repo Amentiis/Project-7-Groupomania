@@ -18,7 +18,7 @@ function Register_Panel() {
 },[rendered]);
 
 const navigate = useNavigate();
-// if (!sessionStorage.getItem('isLoggedIn') === false || sessionStorage.getItem('isLoggedIn') === null ){
+// if (!localStorage.getItem('isLoggedIn') === false || localStorage.getItem('isLoggedIn') === null ){
 //   navigate("/accueil");
 // }
   const messageErrorInvalidMail = `L'email rempli ne respecte pas le format obligatoire`;
@@ -164,7 +164,7 @@ const navigate = useNavigate();
       document.getElementById("loginButton").classList.remove("disabled");
       document.getElementById("registerButton").removeAttribute("disabled", "");
       document.getElementById("registerButton").classList.remove("disabled");
-      sessionStorage.setItem("email", email );
+      localStorage.setItem("email", email );
       Redirectlogin();
     }, 2000);
   }

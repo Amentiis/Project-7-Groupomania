@@ -12,7 +12,8 @@ function Connexion_Panel() {
 
   useEffect(() => {
       if(rendered){
-        const preloadMail = sessionStorage.getItem("email")
+
+        const preloadMail = localStorage.getItem("email")
         if(preloadMail === undefined || preloadMail === null || preloadMail === "" ){
           document.getElementById("inputEmail").value = "";
 
@@ -28,9 +29,7 @@ function Connexion_Panel() {
 
 
   const navigate = useNavigate(); 
-  // if (!(sessionStorage.getItem('isLoggedIn') === false || sessionStorage.getItem('isLoggedIn') === null )){
-  //   navigate("/accueil");
-  // }
+
 
 
   function PostedData(e) {
@@ -57,8 +56,8 @@ function Connexion_Panel() {
         
       })
       .then(function (value) {
-        sessionStorage.setItem ("token", value.token)
-        sessionStorage.setItem ("userid", value.userId)
+        localStorage.setItem ("token", value.token)
+        localStorage.setItem ("userid", value.userId)
       });
   }
 
@@ -89,7 +88,7 @@ function Connexion_Panel() {
         document.getElementById("loginButton").classList.remove("disabled");
         document.getElementById("registerButton").removeAttribute("disabled", "");
         document.getElementById("registerButton").classList.remove("disabled");
-        sessionStorage.setItem("isLoggedIn" , true);
+        localStorage.setItem("isLoggedIn" , true);
         navigate("/accueil");
       }, 1000);
      
