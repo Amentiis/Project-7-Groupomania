@@ -26,9 +26,73 @@ function Home_Panel() {
   const [firstname, setfirstname] = useState("");
   const [isAdministrator, setisAdministrator] = useState(false);
   const [profile_picture, setprofile_picture] = useState("");
+  const [DarkModeOn, setDarkModeOn] = useState(localStorage.getItem('darkModeOn'));
   const [postId, setpostId] = useState("");
+
   var [commentshow, setcommentshow] = useState("");
 
+
+
+  function showDarkMode(){
+    if(localStorage.getItem('darkModeOn') === 'true'){
+      EnableDarkMode();
+    }
+  }
+
+
+  function EnableDarkMode() {
+    document.getElementById("enabledarkmod").checked = true;
+     document.getElementById('panel_profil_block').classList.add('darkmode');
+    document.getElementsByClassName('header')[0].classList.add('header_darkmode');
+    document.getElementsByTagName('header')[0].classList.add('header_darkmode');
+    document.getElementsByClassName('body_home')[0].classList.add('darkmode');
+    document.getElementsByClassName('container_change_personalinformation')[0].classList.add('darkmode');
+    document.getElementsByClassName('container_change_password')[0].classList.add('darkmode');
+    document.getElementsByClassName('menu')[0].classList.add('input_darkmode');
+    document.getElementsByClassName('right')[0].classList.add('input_darkmode');
+    document.querySelectorAll(`input[type='file']`).forEach(element => element.classList.add('input_darkmode'));
+    document.querySelectorAll(`input[type='text']`).forEach(element => element.classList.add('input_darkmode_text'));
+    document.querySelectorAll(`input[type='password']`).forEach(element => element.classList.add('input_darkmode_text'));
+    document.getElementsByClassName('input_file_icon_container')[0].classList.add('input_darkmode');
+    document.getElementsByClassName('button_apply')[0].classList.add('button_darkmode');
+    document.getElementsByClassName('button_apply_password')[0].classList.add('button_darkmode');
+    document.querySelectorAll('span').forEach(element => element.classList.add('span_darkmode'));
+    document.querySelectorAll(`.article_container`).forEach(element => element.classList.add('darkmode_article'));
+    document.getElementById('panel_post_block').classList.add('darkmode_post');
+    
+  }
+
+
+  function darkmodtoggle() {
+    if(localStorage.getItem('darkModeOn') === 'true'){
+      localStorage.setItem('darkModeOn',false)
+      setDarkModeOn(false);
+    }
+    else{
+      localStorage.setItem('darkModeOn',true)
+      setDarkModeOn(true);
+    }
+    
+    document.getElementById('panel_profil_block').classList.toggle('darkmode');
+    document.getElementsByClassName('header')[0].classList.toggle('header_darkmode');
+    document.getElementsByTagName('header')[0].classList.toggle('header_darkmode');
+    document.getElementsByClassName('body_home')[0].classList.toggle('darkmode');
+    document.getElementsByClassName('container_change_personalinformation')[0].classList.toggle('darkmode');
+    document.getElementsByClassName('container_change_password')[0].classList.toggle('darkmode');
+    document.getElementsByClassName('menu')[0].classList.toggle('input_darkmode');
+    document.getElementsByClassName('right')[0].classList.toggle('input_darkmode');
+    document.querySelectorAll(`input[type='file']`).forEach(element => element.classList.toggle('input_darkmode'));
+    document.querySelectorAll(`input[type='text']`).forEach(element => element.classList.toggle('input_darkmode_text'));
+    document.querySelectorAll(`input[type='password']`).forEach(element => element.classList.toggle('input_darkmode_text'));
+    document.getElementsByClassName('input_file_icon_container')[0].classList.toggle('input_darkmode');
+    document.getElementsByClassName('button_apply')[0].classList.toggle('button_darkmode');
+    document.getElementsByClassName('button_apply_password')[0].classList.toggle('button_darkmode');
+    document.querySelectorAll('span').forEach(element => element.classList.toggle('span_darkmode'));
+    document.querySelectorAll(`.article_container`).forEach(element => element.classList.toggle('darkmode_article'));
+
+    document.getElementById('panel_post_block').classList.toggle('darkmode_post');
+    
+  }
 
   const succesnotify = () => toast.success('Article posté !', {
     position: "bottom-right",
@@ -199,6 +263,7 @@ function Home_Panel() {
           
           if(!localStorage.getItem('notifyOff') === true){
             if(lastname && firstname){
+              localStorage.setItem('darkModeOn',false)
               localStorage.setItem('notifyOff', true);
               toast.success(`👋 Bienvenue ${lastname} ${firstname} `, {
                 position: "bottom-right",
@@ -225,6 +290,7 @@ function Home_Panel() {
       document.removeEventListener("keydown", escFunction, false);
     };
   },);
+
 
   function OptionPanel(props) {
     const itsYourPost = props.itsYourPost;
@@ -347,6 +413,7 @@ function Home_Panel() {
   }
 
   async function displayPostOnScreen(allposts,Administrator){
+
     allposts = allposts.reverse();
     for(let post in allposts){
       var author_id = allposts[post].userId;
@@ -393,7 +460,12 @@ function Home_Panel() {
 
       var main_container = document.getElementById('main_container');
       var article_container = document.createElement('div');
+
       article_container.classList.add("article_container");
+      if(DarkModeOn){
+        article_container.classList.add("darkmode_article");
+      }
+
       article_container.setAttribute("data-id",idOfThePost)
       main_container.appendChild(article_container);
 
@@ -412,7 +484,7 @@ function Home_Panel() {
       poster_information.appendChild(nameAndDate);
 
       var authorOfThePost = document.createElement('p');
-      authorOfThePost.innerHTML = author_profile_isAdministrator? `Poste de <span>  ${author_lastname} ${author_firstname} <i class="fa-solid fa-star"></i> <span> `  : `Poste de <span>  ${author_lastname} ${author_firstname} <span>`
+      authorOfThePost.innerHTML = author_profile_isAdministrator? `Poste de <span class="author_name_post">  ${author_lastname} ${author_firstname} <i class="fa-solid fa-star"></i> `  : `Poste de <span>  ${author_lastname} ${author_firstname}`
       nameAndDate.appendChild(authorOfThePost);
 
       var date = document.createElement('p');
@@ -562,7 +634,7 @@ function Home_Panel() {
     }
 
     openCommentary();
-    
+    showDarkMode();
   } 
 
 
@@ -853,6 +925,14 @@ function Home_Panel() {
                   </ul>
                 </div>
                 <div className="container_change_profil_icon">
+                  <div className="container_darkmod">
+                    <input id="enabledarkmod" className="enabledarkmod" type="checkbox" onChange={darkmodtoggle}/>
+                    <label className="labeldarkmod" htmlFor="checkbox">
+                      <i className="fas fa-moon"></i>
+                      <i className='fas fa-sun'></i>
+                      <div className='ball'/>
+                    </label>
+                  </div>
                   <img id="profileImg" className="profileImg" src={profile_picture} alt="" />
                   <p id= "profile_firstname_lastname" className="profile_firstname_lastname">{firstname} {lastname}</p>
                   <div className="input_file_icon_container">
