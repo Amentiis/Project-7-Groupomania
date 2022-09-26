@@ -42,11 +42,8 @@ function Home_Panel() {
 
   function EnableDarkMode() {
     document.getElementById("enabledarkmod").checked = true;
-     document.getElementById('panel_profil_block').classList.add('darkmode');
-    document.getElementsByClassName('header')[0].classList.add('header_darkmode');
-    document.getElementsByTagName('header')[0].classList.add('header_darkmode');
-    document.getElementsByClassName('body_home')[0].classList.add('darkmode');
-    document.getElementsByClassName('container_change_personalinformation')[0].classList.add('darkmode');
+    document.getElementById('panel_profil_block').classList.add('darkmode');
+    document.getElementsByClassName('container_change_personalinformation')[0].classList.toggle('darkmode');
     document.getElementsByClassName('container_change_password')[0].classList.add('darkmode');
     document.getElementsByClassName('menu')[0].classList.add('input_darkmode');
     document.getElementsByClassName('right')[0].classList.add('input_darkmode');
@@ -56,27 +53,27 @@ function Home_Panel() {
     document.getElementsByClassName('input_file_icon_container')[0].classList.add('input_darkmode');
     document.getElementsByClassName('button_apply')[0].classList.add('button_darkmode');
     document.getElementsByClassName('button_apply_password')[0].classList.add('button_darkmode');
-    document.querySelectorAll('span').forEach(element => element.classList.add('span_darkmode'));
-    document.querySelectorAll(`.article_container`).forEach(element => element.classList.add('darkmode_article'));
+    //document.querySelectorAll('span').forEach(element => element.classList.add('span_darkmode'));
+
     document.getElementById('panel_post_block').classList.add('darkmode_post');
-    
+
+
+        // document.getElementsByClassName('body_home')[0].classList.add('body_home_darkmode');
+       // document.querySelectorAll(`.article_container`).forEach(element => element.classList.add('darkmode_article'));
   }
 
 
   function darkmodtoggle() {
     if(localStorage.getItem('darkModeOn') === 'true'){
       localStorage.setItem('darkModeOn',false)
-      setDarkModeOn(false);
+      setDarkModeOn('false');
     }
     else{
       localStorage.setItem('darkModeOn',true)
-      setDarkModeOn(true);
+      setDarkModeOn('true');
     }
     
     document.getElementById('panel_profil_block').classList.toggle('darkmode');
-    document.getElementsByClassName('header')[0].classList.toggle('header_darkmode');
-    document.getElementsByTagName('header')[0].classList.toggle('header_darkmode');
-    document.getElementsByClassName('body_home')[0].classList.toggle('darkmode');
     document.getElementsByClassName('container_change_personalinformation')[0].classList.toggle('darkmode');
     document.getElementsByClassName('container_change_password')[0].classList.toggle('darkmode');
     document.getElementsByClassName('menu')[0].classList.toggle('input_darkmode');
@@ -87,11 +84,42 @@ function Home_Panel() {
     document.getElementsByClassName('input_file_icon_container')[0].classList.toggle('input_darkmode');
     document.getElementsByClassName('button_apply')[0].classList.toggle('button_darkmode');
     document.getElementsByClassName('button_apply_password')[0].classList.toggle('button_darkmode');
-    document.querySelectorAll('span').forEach(element => element.classList.toggle('span_darkmode'));
-    document.querySelectorAll(`.article_container`).forEach(element => element.classList.toggle('darkmode_article'));
 
+    if((document.querySelectorAll(`.article_container`).length) !== 0){
+      document.querySelectorAll(`.article_container`).forEach(element => element.classList.add('darkmode_article'));
+      document.querySelectorAll(`.article_container`).forEach(element => element.classList.remove('article_container'));
+    }else{
+      document.querySelectorAll(`.darkmode_article`).forEach(element => element.classList.add('article_container'))
+      document.querySelectorAll(`.darkmode_article`).forEach(element => element.classList.remove('darkmode_article'))
+    }
     document.getElementById('panel_post_block').classList.toggle('darkmode_post');
+
+    if((document.querySelectorAll(`.body_home`).length) !== 0){
+      document.getElementsByClassName('body_home')[0].classList.add('body_home_darkmode');
+      document.getElementsByClassName('body_home')[0].classList.remove('body_home');
+    }else{
+      document.getElementsByClassName('body_home_darkmode')[0].classList.add('body_home');
+      document.getElementsByClassName('body_home')[0].classList.remove('body_home_darkmode');
+    }
+
+    if(document.getElementsByClassName('header')[0]){
+      document.getElementsByClassName('header')[0].classList.add('header_darkmode')
+      document.getElementsByClassName('header_darkmode')[0].classList.remove('header');
+
+    }else{
+      document.getElementsByClassName('header_darkmode')[0].classList.add('header');
+      document.getElementsByClassName('header')[0].classList.remove('header_darkmode');
+
+    }
     
+    if(document.getElementsByClassName('first_header')[0]){
+      document.getElementsByClassName('first_header')[0].classList.add('first_header_darkmode');
+      document.getElementsByClassName('first_header_darkmode')[0].classList.remove('first_header');
+    }else{
+      document.getElementsByClassName('first_header_darkmode')[0].classList.add('first_header');
+      document.getElementsByClassName('first_header')[0].classList.remove('first_header_darkmode');
+
+    }
   }
 
   const succesnotify = () => toast.success('Article posté !', {
@@ -400,7 +428,13 @@ function Home_Panel() {
 
 
   function openAndCloseCommentary(x){
-   var commentary_container = x.target.closest('.article_container').querySelector('.commentary_container');
+
+    if(x.target.closest('.article_container')){
+      var commentary_container = x.target.closest('.article_container').querySelector('.commentary_container');
+    }else{
+      commentary_container = x.target.closest('.darkmode_article').querySelector('.commentary_container');
+    }
+   
 
    if (!(commentary_container.classList.contains('commentary_open'))){
     commentary_container.classList.add('commentary_open');
@@ -461,9 +495,12 @@ function Home_Panel() {
       var main_container = document.getElementById('main_container');
       var article_container = document.createElement('div');
 
-      article_container.classList.add("article_container");
-      if(DarkModeOn){
+      
+      console.log(DarkModeOn);
+      if(DarkModeOn === 'true'){
         article_container.classList.add("darkmode_article");
+      }else{
+        article_container.classList.add("article_container");
       }
 
       article_container.setAttribute("data-id",idOfThePost)
@@ -640,8 +677,14 @@ function Home_Panel() {
 
   
   function likeanddisliked(x){
-    var idPost = x.target.parentElement.closest(".article_container").dataset.id;
     x.preventDefault()
+    if(x.target.parentElement.closest(".article_container")){
+      var idPost = x.target.parentElement.closest(".article_container").dataset.id;
+    }else{
+      idPost = x.target.parentElement.closest(".darkmode_article").dataset.id;
+    }
+    
+
     if(x.target.parentElement.disabled === true){
     }else{
       if(( x.target.querySelector('svg').classList.contains('like'))){
@@ -722,11 +765,10 @@ function Home_Panel() {
   const navigate = useNavigate();
 
   const placeholder_textarea = 'Que souhaitez-vous dire, ' + firstname + " ?";
-
   return (
-    <div className="body_home">
-      <header>
-        <div className="header">
+    <div className={(DarkModeOn === "true")? "body_home_darkmode" : "body_home"}>
+      <header className={(DarkModeOn === "true")? "first_header_darkmode" : "first_header"}> 
+        <div className={(DarkModeOn === "true")? "header_darkmode" : "header"}>
           <div className="left">
             <img src={logo} alt="Logo Groupomania" className="logo" />
           </div>
@@ -973,9 +1015,9 @@ function Home_Panel() {
         </div>
         <div id="main_container" className="main_container">
           <div id ="loader_container" className="loader_container">
-            <div className="article_container">
-              <div className="poster_information_loader">
-                <div className="profil_loader"></div>
+            <div className={(DarkModeOn === "true")? "darkmode_article" : "article_container"}>
+              <div className={(DarkModeOn === "true")? "poster_information_loader_darkmode" : "poster_information_loader"}>
+                <div className={(DarkModeOn === "true")? "profil_loader_darkmode" : "profil_loader"}></div>
                 <div className="nameanddate">
                   <p></p>
                   <p className="date"></p>
@@ -984,16 +1026,16 @@ function Home_Panel() {
               <article className="article">
                 <div className="likeandcomment_container">
                   <div className="button_icon_heart">
-                  <i className="fa-solid fa-heart icon_heart_loader"></i>
+                  <i className={(DarkModeOn === "true")? "fa-solid fa-heart icon_heart_loader_darkmode" : "fa-solid fa-heart icon_heart_loader"}></i>
                   </div>
-                  <div className="comment_loader">
+                  <div className={(DarkModeOn === "true")? "comment_loader_darkmode" : "comment_loader"}>
                   </div>
                 </div>
               </article>
             </div>
-            <div className="article_container">
-              <div className="poster_information_loader">
-                <div className="profil_loader"></div>
+            <div className={(DarkModeOn === "true")? "darkmode_article" : "article_container"}>
+              <div className={(DarkModeOn === "true")? "poster_information_loader_darkmode" : "poster_information_loader"}>
+                <div className={(DarkModeOn === "true")? "profil_loader_darkmode" : "profil_loader"}></div>
                 <div className="nameanddate">
                   <p></p>
                   <p className="date"></p>
@@ -1001,15 +1043,15 @@ function Home_Panel() {
               </div>
               <article className="article">
                 <p></p>
-                <div className="image_container_loader">
+                <div className={(DarkModeOn === "true")? "image_container_loader_darkmode" : "image_container_loader"}> 
                   <div className="image_loader">
                   </div>
                 </div>
                 <div className="likeandcomment_container">
-                  <div className="button_icon_heart">
-                  <i className="fa-solid fa-heart icon_heart_loader"></i>
+                  <div className="button_icon_heart"> 
+                  <i className={(DarkModeOn === "true")? "fa-solid fa-heart icon_heart_loader_darkmode" : "fa-solid fa-heart icon_heart_loader"}></i>
                   </div>
-                  <div className="comment_loader">
+                  <div className={(DarkModeOn === "true")? "comment_loader_darkmode" : "comment_loader"}>
                   </div>
                 </div>
               </article>
@@ -1141,7 +1183,12 @@ function Home_Panel() {
 
   function deletePost (e){
         e.preventDefault();
-        var postIddelete = (e.target.closest('.article_container').dataset.id);
+        if (e.target.closest('.article_container')){
+          var postIddelete = (e.target.closest('.article_container').dataset.id);
+        }else{
+          postIddelete = (e.target.closest('.darkmode_article').dataset.id);
+        }
+        
         fetch(`http://localhost:3000/api/post/${postIddelete}`, {
         method: "DELETE",
         headers: {
@@ -1168,7 +1215,12 @@ function Home_Panel() {
     e.preventDefault();
     const userId = localStorage.getItem('userid')
     var commentIddelete = (e.target.closest('.commentary').dataset.id)
-    var postIddelete = (e.target.closest('.article_container').dataset.id);
+
+    if(e.target.closest('.article_container')){
+      var postIddelete = (e.target.closest('.article_container').dataset.id);
+    }else{
+      postIddelete = (e.target.closest('.darkmode_article').dataset.id);
+    }
 
     fetch(`http://localhost:3000/api/comment/${postIddelete}`, {
     method: "DELETE",
@@ -1532,7 +1584,13 @@ function fileAddToPanel3(x){
     if(x.target.closest(".article").querySelector('.article_image')){
       imageurlmodify = x.target.closest(".article").querySelector('.article_image');
     }
-    setpostId((x.target.closest(".article_container").dataset.id));
+
+    if(x.target.closest(".article_container")){
+      setpostId((x.target.closest(".article_container").dataset.id));
+    }else{
+      setpostId((x.target.closest(".darkmode_article").dataset.id));
+    }
+   
     if (x.target.closest(".article").querySelector('.image_container')){
       fileAddToPanel2(imageurlmodify);
     }
@@ -1558,7 +1616,13 @@ function fileAddToPanel3(x){
   }
   function showpanelCommentary(e) {
     setcommentshow(e.target.parentElement.parentElement.parentElement.dataset.id)
-    setpostId((e.target.closest(".article_container").dataset.id));
+
+    if(e.target.closest(".article_container")){
+      setpostId((e.target.closest(".article_container").dataset.id));
+    }else{
+      setpostId((e.target.closest(".darkmode_article").dataset.id));
+    }
+    
     if (document.getElementById("container_panel_commentary").classList.contains("container_panel_commentary_active")){
       document.getElementById("container_panel_commentary").classList.remove("container_panel_commentary_active");
     } else {
