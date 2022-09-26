@@ -104,6 +104,10 @@ article container background-color: rgb(24, 24, 25);
   color: #757473;
 }
 
+.darkmode_article .image_container{
+  background-color: transparent;
+}
+
 
 
 
@@ -158,6 +162,9 @@ article container background-color: rgb(24, 24, 25);
   background-color: #161717;
 }
 
+
+/* DARKMODE POST */
+
 .darkmode_post .header_panel{
   background-color: #1A1B1C;
   border-bottom: solid 3px #5D1B0D;
@@ -188,6 +195,83 @@ article container background-color: rgb(24, 24, 25);
 .darkmode_post .post_textarea{
   color: #757473;
 }
+
+.darkmode_post .panel_post_block{
+  background-color: #1A1B1C !important;
+}
+
+
+/* DARKMODE MODIFY */
+
+.darkmode_modify .header_panel{
+  background-color: #1A1B1C;
+  border-bottom: solid 3px #5D1B0D;
+}
+
+.darkmode_modify .panel_modify{
+  background-color: #181819;
+}
+
+.darkmode_modify .post_textarea{
+  background-color: #181819;
+  color: #757473;
+}
+
+
+.darkmode_modify .publish_button{
+  background-color: #1A1B1C !important;
+  color:#757473 !important;
+}
+
+.darkmode_modify .addimage_button {
+  background-color: #1A1B1C !important;
+}
+
+.darkmode_modify .publish_button:hover{
+  background-color: #681D0D;
+}
+
+.darkmode_modify .panel_modify_block{
+  background-color: #1A1B1C !important;
+}
+
+
+
+
+/* DARKMODE COMMENT */
+
+.darkmode_comment .header_panel{
+  background-color: #1A1B1C;
+  border-bottom: solid 3px #5D1B0D;
+}
+
+.darkmode_comment .panel_commentary{
+  background-color: #181819;
+}
+
+.darkmode_comment .post_textarea{
+  background-color: #181819;
+  color: #757473;
+}
+
+
+.darkmode_comment .publish_button{
+  background-color: #1A1B1C !important;
+  color:#757473 !important;
+}
+
+.darkmode_comment .addimage_button {
+  background-color: #1A1B1C !important;
+}
+
+.darkmode_comment .publish_button:hover{
+  background-color: #681D0D;
+}
+
+.darkmode_comment .panel_commentary_block{
+  background-color: #1A1B1C !important;
+}
+
 
 
 /* header : #1A1B1C
@@ -1665,7 +1749,7 @@ text-align: start;
 
 
 @media (max-width: 1300px) {
-  .header {
+  .header ,.header_darkmode {
     width: 100vw;
     height: inherit;
     align-items: center;
@@ -1674,6 +1758,11 @@ text-align: start;
     flex-direction: column;
   }
   .header .right{
+    margin: 0;
+    margin-top: 20px;
+  }
+
+  .header_darkmode .right{
     margin: 0;
     margin-top: 20px;
   }
@@ -1738,10 +1827,18 @@ text-align: start;
     padding: 0;
   }
 
-  .header{
+  .header, .header_darkmode{
     padding: 15px;
   }
   .header .right{
+    width: 300px;
+    height: 90px;
+    gap: 10px;
+    flex-direction: column;
+    justify-content : center;
+  }
+
+  .header_darkmode .right{
     width: 300px;
     height: 90px;
     gap: 10px;

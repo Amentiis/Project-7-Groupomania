@@ -43,7 +43,7 @@ function Home_Panel() {
   function EnableDarkMode() {
     document.getElementById("enabledarkmod").checked = true;
     document.getElementById('panel_profil_block').classList.add('darkmode');
-    document.getElementsByClassName('container_change_personalinformation')[0].classList.toggle('darkmode');
+    document.getElementsByClassName('container_change_personalinformation')[0].classList.add('darkmode');
     document.getElementsByClassName('container_change_password')[0].classList.add('darkmode');
     document.getElementsByClassName('menu')[0].classList.add('input_darkmode');
     document.getElementsByClassName('right')[0].classList.add('input_darkmode');
@@ -55,7 +55,9 @@ function Home_Panel() {
     document.getElementsByClassName('button_apply_password')[0].classList.add('button_darkmode');
     //document.querySelectorAll('span').forEach(element => element.classList.add('span_darkmode'));
 
-    document.getElementById('panel_post_block').classList.add('darkmode_post');
+    document.getElementById('container_panel_post').classList.add('darkmode_post');
+    document.getElementById('container_panel_modify').classList.add('darkmode_modify');
+    document.getElementById('container_panel_commentary').classList.add('darkmode_comment');
 
 
         // document.getElementsByClassName('body_home')[0].classList.add('body_home_darkmode');
@@ -84,6 +86,9 @@ function Home_Panel() {
     document.getElementsByClassName('input_file_icon_container')[0].classList.toggle('input_darkmode');
     document.getElementsByClassName('button_apply')[0].classList.toggle('button_darkmode');
     document.getElementsByClassName('button_apply_password')[0].classList.toggle('button_darkmode');
+    document.getElementById('container_panel_post').classList.add('darkmode_post');
+    document.getElementById('container_panel_modify ').classList.add('darkmode_modify');
+    document.getElementById('container_panel_commentary').classList.add('darkmode_comment');
 
     if((document.querySelectorAll(`.article_container`).length) !== 0){
       document.querySelectorAll(`.article_container`).forEach(element => element.classList.add('darkmode_article'));
@@ -92,7 +97,6 @@ function Home_Panel() {
       document.querySelectorAll(`.darkmode_article`).forEach(element => element.classList.add('article_container'))
       document.querySelectorAll(`.darkmode_article`).forEach(element => element.classList.remove('darkmode_article'))
     }
-    document.getElementById('panel_post_block').classList.toggle('darkmode_post');
 
     if((document.querySelectorAll(`.body_home`).length) !== 0){
       document.getElementsByClassName('body_home')[0].classList.add('body_home_darkmode');
@@ -1066,7 +1070,8 @@ function Home_Panel() {
   );
 
   function returntologinpage() {
-    localStorage.clear();
+    let keysToRemove = ["isLoggedIn", "userid","token"];
+    keysToRemove.forEach(k =>localStorage.removeItem(k))
     navigate("/login");
   }
 
@@ -1309,7 +1314,8 @@ function PostChangePassword(e){
     .then(function (res) {
       if (res.ok) {
         succesnotifymodifypassword();
-        localStorage.clear();
+        let keysToRemove = ["isLoggedIn", "userid","token"];
+        keysToRemove.forEach(k =>localStorage.removeItem(k))
         setTimeout(function () {
           window.location.reload();
         }, 4000);
