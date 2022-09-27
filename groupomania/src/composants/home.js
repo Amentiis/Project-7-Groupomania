@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import ReactDOM from 'react-dom/client'
 import { useNavigate } from "react-router";
 import logo from "../assets/logo.svg";
+import defaultProfilPicture from "../assets/profiluser.png"
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -87,7 +88,7 @@ function Home_Panel() {
     document.getElementsByClassName('button_apply')[0].classList.toggle('button_darkmode');
     document.getElementsByClassName('button_apply_password')[0].classList.toggle('button_darkmode');
     document.getElementById('container_panel_post').classList.add('darkmode_post');
-    document.getElementById('container_panel_modify ').classList.add('darkmode_modify');
+    document.getElementById('container_panel_modify').classList.add('darkmode_modify');
     document.getElementById('container_panel_commentary').classList.add('darkmode_comment');
 
     if((document.querySelectorAll(`.article_container`).length) !== 0){
@@ -289,7 +290,12 @@ function Home_Panel() {
         .then(function (value) {
           setlastname(value.lastname);
           setfirstname(value.firstname);
-          setprofile_picture(value.iconurl);
+          if (value.iconurl){
+            setprofile_picture(value.iconurl);
+          }else{
+            setprofile_picture(defaultProfilPicture)
+          }
+          
           setisAdministrator(value.isAdministrator)
           refreshPostInPage(value.isAdministrator);
           
@@ -517,7 +523,13 @@ function Home_Panel() {
 
       var profilpicture = document.createElement('img');
       profilpicture.classList.add('profil');
-      profilpicture.setAttribute('src',author_profile_picture)
+
+      if (author_profile_picture){
+        profilpicture.setAttribute('src',author_profile_picture)
+      }else{
+        profilpicture.setAttribute('src',defaultProfilPicture)
+      }
+      
       poster_information.appendChild(profilpicture);
 
       var nameAndDate = document.createElement('div');

@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs')
+require("dotenv").config();
 
 exports.signup = (req,res,next)=>{
     bcrypt.hash(req.body.password, 10)
@@ -36,7 +37,7 @@ exports.login = (req, res, next) => {
               userId: user._id,
               token: jwt.sign(
                 { userId: user._id },
-                "IMASECRETKEY",
+                process.env.JWT_TOKEN_KEY,
                 { expiresIn: '24h' }
               )
             });
@@ -145,7 +146,7 @@ exports.login = (req, res, next) => {
     }
     User.findOne({ _id: req.body._id})
     .then(user => {
-      if ((user._id != req.auth.userId) && (req.auth.userId != '63178ba24527038ff945fee1')) {
+      if ((user._id != req.auth.userId) && (req.auth.userId != '6332f583a71cc6f7749d2080')) {
             res.status(401).json({message: 'Not authorized'});
         } else {
             if (user.iconurl){
@@ -160,11 +161,7 @@ exports.login = (req, res, next) => {
             }else{
               user.updateOne({ _id: req.body._id , iconurl: isFile()})
               .then(() => res.status(200).json({ iconurl : isFile()}))
-                    .catch(error => res.status(400).json({ error }));
-                    res.status(200).json({
-                      iconurl : isFile(),
-                      
-                    });
+              .catch(error => res.status(400).json({ error }));
             }
         }
     })

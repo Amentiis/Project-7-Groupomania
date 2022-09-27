@@ -82,7 +82,7 @@ exports.createPost = (req, res, next) => {
   exports.deletePost = (req, res, next) => {
     Post.findOne({ _id: req.params.id})
         .then(post => {
-          if ((post.userId != req.auth.userId) && (req.auth.userId != '63178ba24527038ff945fee1')) {
+          if ((post.userId != req.auth.userId) && (req.auth.userId != '6332f583a71cc6f7749d2080')) {
                 res.status(401).json({message: 'Not authorized'});
             } else {
               if (post.imageUrl){

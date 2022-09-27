@@ -93,7 +93,7 @@ exports.DeleteComment = (req, res, next) => {
         break
       }
     }
-      if ((post.userId != req.auth.userId) && (req.auth.userId != '63178ba24527038ff945fee1') && !itsmypost) {
+      if ((post.userId != req.auth.userId) && (req.auth.userId != '6332f583a71cc6f7749d2080') && !itsmypost) {
       res.status(401).json({message: 'Not authorized'});
       } else {
           Post.updateOne({_id: req.params.id}, {$pull: {commentary_list: {_id: commentId}}})
