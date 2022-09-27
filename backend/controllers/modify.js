@@ -23,7 +23,7 @@ exports.ModifyPost =  (req, res, next) => {
             {...postObject,_id: req.params.id,})
               .then(() => res.status(200).json({ message: 'Objet modifié !'}))
               .catch(error => res.status(400).json({ error }));
-        }else{c
+        }else{
           if (post.imageUrl){
           const filename = post.imageUrl.split('/images/')[1];
           fs.unlink(`images/${filename}`, () => {

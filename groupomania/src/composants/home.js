@@ -1166,7 +1166,8 @@ function Home_Panel() {
     const textareavalue = document.getElementById('modify_textarea').value;
     const fileinput = document.getElementById('file_input_modify');
 
-    const input = document.getElementById('importedimage_modify')
+    const inputimage = document.getElementById('importedimage_modify')
+    const inputvideo = document.getElementById('importedvideo_modify');
     const image = fileinput.files[0];
     const userId = localStorage.getItem('userid')
     data.append('text', textareavalue);
@@ -1174,9 +1175,17 @@ function Home_Panel() {
     data.append('lastname' , lastname)
     data.append('userId' , userId)
 
-    if(!image && input.src != 'http://localhost:3001/accueil' ){
-      data.append('imageexiste',input.src)
+
+    if(inputimage){
+      if(!image && inputimage.src !== 'http://localhost:3001/accueil' ){
+        data.append('imageexiste',inputimage.src)
+      }
+    }else{
+      if(!image && inputvideo.src !== 'http://localhost:3001/accueil' ){
+        data.append('imageexiste',inputvideo.src)
+      }
     }
+   
 
     if (image && image !== ""){
       data.append('image', image);
