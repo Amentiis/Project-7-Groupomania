@@ -524,7 +524,7 @@ function Home_Panel() {
       var profilpicture = document.createElement('img');
       profilpicture.classList.add('profil');
 
-      if (author_profile_picture){
+      if (author_profile_picture !== ""){
         profilpicture.setAttribute('src',author_profile_picture)
       }else{
         profilpicture.setAttribute('src',defaultProfilPicture)
@@ -1159,19 +1159,25 @@ function Home_Panel() {
   }
 
 
-  function modifyPost (e){
+  async function modifyPost (e){
    
     e.preventDefault();
     let data = new FormData();
     const textareavalue = document.getElementById('modify_textarea').value;
     const fileinput = document.getElementById('file_input_modify');
+
+    const input = document.getElementById('importedimage_modify')
     const image = fileinput.files[0];
     const userId = localStorage.getItem('userid')
     data.append('text', textareavalue);
     data.append('firstname' , firstname)
     data.append('lastname' , lastname)
     data.append('userId' , userId)
-    
+
+    if(!image && input.src != 'http://localhost:3001/accueil' ){
+      data.append('imageexiste',input.src)
+    }
+
     if (image && image !== ""){
       data.append('image', image);
     }
@@ -1195,6 +1201,44 @@ function Home_Panel() {
         .then(function (value) {
          
         });
+
+
+
+            // function imageexiste (){
+    //     let url = input.src
+    //     var testest;
+    //     const toDataURL = url => fetch(url)
+    //     .then(response => response.blob())
+    //     .then(blob => new Promise((resolve, reject) => {
+    //     const reader = new FileReader()
+    //     reader.onloadend = () => resolve(reader.result)
+    //     reader.onerror = reject
+    //     reader.readAsDataURL(blob)
+    //     }))
+    //     function dataURLtoFile(dataurl, filename) {
+    //       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+    //       bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    //       while(n--){
+    //       u8arr[n] = bstr.charCodeAt(n);
+    //       }
+    //      return new File([u8arr], filename, );
+    //     }
+    //     toDataURL(url)
+    //     .then(dataUrl => {
+    //       var fileData = dataURLtoFile(dataUrl, "imageName");
+    //       testest = fileData
+    //     })
+    //     return new Promise(resolve => {
+    //       setTimeout(() => {
+    //         resolve(testest);
+    //       }, 2000);
+    //     });
+    //  }
+
+
+    // if(!image && input.src !=  "http://localhost:3001/accueil" ){
+    //   data.append('image', await imageexiste());
+    // }
   }
 
 
@@ -1422,14 +1466,13 @@ function PostChangeProfilePicture(x){
   }
 
   function fileAddToPanel2(x){
-
-
     var listofformat = ['mp4','webm','avi','mov','flv','mkv'];   
     var image = document.getElementById('importedimage_modify')
     var video = document.getElementById('importedvideo_modify')
 
     console.log(image);
     console.log(video);
+
     if(image && !video){
       console.log("Panel Image");
       if (x.src.split('.')[1] === listofformat.find(format => format === x.src.split('.')[1])){
@@ -1505,6 +1548,7 @@ function fileAddToPanel3(x){
     }
    
     image.src = URL.createObjectURL(file)
+
     image.style.border = "solid 4px #fd2d01"
     image.classList.add("display_block")
   }

@@ -154,9 +154,7 @@ exports.login = (req, res, next) => {
               fs.unlink(`images/profilepicture/${filename}`, () => {
                 user.updateOne({ _id: req.body._id , iconurl: isFile()})
                     .then(() => res.status(200).json({ iconurl : isFile()}))
-
-                    .catch(error => res.status(400).json({ error }));
-                   
+                    .catch(error => res.status(400).json({ error }));        
               });
             }else{
               user.updateOne({ _id: req.body._id , iconurl: isFile()})

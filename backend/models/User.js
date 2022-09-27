@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema({
     email : {type : String , require : true , unique : true},
     password : {type : String , require : true},
     isAdministrator : {type : Boolean , default: false , require : false },
-    iconurl: { type: String, required: false,},
+    iconurl: { type: String, required: false, default: ""},
 }) 
  
 
