@@ -184,38 +184,49 @@ function Home_Panel() {
     progress: undefined,
     });
 
-    const succesnotifymodifyprofil = () => toast.success('Modification effectué avec succès !', {
-      position: "bottom-right",
-      className : 'succes_notify',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      });
+  const succesnotifymodifyprofil = () => toast.success('Modification photo de profil effectué !', {
+    position: "bottom-right",
+    className : 'succes_notify',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    });
 
-    const succesnotifymodifypassword = () => toast.success('Mot de passe modifié , déconnexion', {
-      position: "bottom-right",
-      className : 'succes_notify',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      });
+  const Formatnotsupport= (format) => toast.success(`Format .${format} non supporté` , {
+    position: "bottom-right",
+    className : 'succes_notify',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    });  
 
-    const errornotifymodifypassword = () => toast.error('Mot de passe incorrect!', {
-      position: "bottom-right",
-      className : 'succes_notify',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      });
+  const succesnotifymodifypassword = () => toast.success('Mot de passe modifié , déconnexion', {
+    position: "bottom-right",
+    className : 'succes_notify',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    });
+
+  const errornotifymodifypassword = () => toast.error('Mot de passe incorrect!', {
+    position: "bottom-right",
+    className : 'succes_notify',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    });
 
 
   const errornotify = () => toast.error('Une erreur est survenu !', {
@@ -285,9 +296,15 @@ function Home_Panel() {
         .then(function (res) {
           if (res.ok) {
             return res.json();
+          }else if(res.status === 401){
+            returntologinpage();
           }
+         
+          
+
         })
         .then(function (value) {
+          console.log(value);
           setlastname(value.lastname);
           setfirstname(value.firstname);
           if (value.iconurl){
@@ -1398,30 +1415,37 @@ function PostChangeProfilePicture(x){
   let data = new FormData();
   var fileinputPicture =  x.target;
   const image = fileinputPicture.files[0];
-  if(image){
-    data.append('_id' , localStorage.getItem('userid'))
-    data.append('image', image);
-  
-    fetch(`http://localhost:3000/api/auth/changeProfilePicture`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        'Authorization': "Bearer " + localStorage.getItem("token"),
-      },
-      body: data
-    })
-      .then(function (res) {
-        if (res.ok) {
-          succesnotifymodifyprofil();
-          refreshPostInPage();
-  
-          return res.json();
-        }
-        errornotify();
+
+  var listofformat= ['jpg','png','gif','webp'];
+
+  if (image.type.split('/')[1] === listofformat.find(format => format === image.type.split('/')[1])){
+    if(image){
+      data.append('_id' , localStorage.getItem('userid'))
+      data.append('image', image);
+    
+      fetch(`http://localhost:3000/api/auth/changeProfilePicture`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          'Authorization': "Bearer " + localStorage.getItem("token"),
+        },
+        body: data
       })
-      .then(function (value) {
-       document.getElementById('profileImg').src = value.iconurl     
-      });
+        .then(function (res) {
+          if (res.ok) {
+            succesnotifymodifyprofil();
+            refreshPostInPage();
+    
+            return res.json();
+          }
+          errornotify();
+        })
+        .then(function (value) {
+         document.getElementById('profileImg').src = value.iconurl     
+        });
+    }
+  }else{
+    Formatnotsupport(image.type.split('/')[1])
   }
 }
 
@@ -1434,58 +1458,55 @@ function PostChangeProfilePicture(x){
     var video = document.getElementById('importedvideo')
     var [file] = fileinput.files;
 
-    if ([file.type][0].split('/')[0] === 'video'){
+    var listofformat= ['jpg','png','gif','webp','mp4','webm','avi','mov','flv','mkv'];
+
+    if (file.type.split('/')[1] === listofformat.find(format => format === file.type.split('/')[1])){
+      if ([file.type][0].split('/')[0] === 'video'){
+          if(!image){
+            video.src = URL.createObjectURL(file)
+            video.style.border = "solid 4px #fd2d01"
+            video.classList.add("display_block")
+          }else{
+            video = document.createElement('video')
+            video.classList.add('importedimage')
+            video.setAttribute('controls',"")
+            video.setAttribute('id',"importedvideo")
+            video.src = URL.createObjectURL(file)
+            video.classList.add("display_block")
+            image.parentNode.replaceChild(video, image)
+          }
+      }else{
         if(!image){
-          video.src = URL.createObjectURL(file)
-          video.style.border = "solid 4px #fd2d01"
-          video.classList.add("display_block")
-        }else{
-          video = document.createElement('video')
-          video.classList.add('importedimage')
-          video.setAttribute('controls',"")
-          video.setAttribute('id',"importedvideo")
-          video.src = URL.createObjectURL(file)
-          video.classList.add("display_block")
-          image.parentNode.replaceChild(video, image)
+          image = document.createElement('img')
+          image.setAttribute('id','importedimage')
+          image.classList.add('importedimage')
+          video.parentNode.replaceChild(image, video)
         }
-    }else{
-
-      if(!image){
-        image = document.createElement('img')
-        image.setAttribute('id','importedimage')
-        image.classList.add('importedimage')
-        video.parentNode.replaceChild(image, video)
+      
+        image.src = URL.createObjectURL(file)
+        image.style.border = "solid 4px #fd2d01"
+        image.classList.add("display_block")
       }
-     
-      image.src = URL.createObjectURL(file)
-      image.style.border = "solid 4px #fd2d01"
-      image.classList.add("display_block")
+      document.getElementById('addimage_text').classList.add('display_none')
+      document.getElementById('panel_post_block').classList.add('panel_post_block_extend')
+      document.getElementById('post_textarea').classList.add('post_textarea_extended')
+      document.getElementById('container_file').classList.add('display_flex')
+      document.getElementById('opentrashicon').classList.add('display_block')
+      document.getElementById('delete_file').classList.add('display_block')
+      document.getElementById('addimage_text').textContent ="";
+      document.getElementById("file-name").textContent = filename; 
+      document.getElementById("file-size").textContent = ((filesize/1024)).toFixed(1) + " KB";
+    }else{
+      Formatnotsupport(file.type.split('/')[1])
     }
-
-  
-    document.getElementById('addimage_text').classList.add('display_none')
-    document.getElementById('panel_post_block').classList.add('panel_post_block_extend')
-    document.getElementById('post_textarea').classList.add('post_textarea_extended')
-    document.getElementById('container_file').classList.add('display_flex')
-    document.getElementById('opentrashicon').classList.add('display_block')
-    document.getElementById('delete_file').classList.add('display_block')
-    document.getElementById('addimage_text').textContent ="";
-    document.getElementById("file-name").textContent = filename; 
-	  document.getElementById("file-size").textContent = ((filesize/1024)).toFixed(1) + " KB";
   }
 
   function fileAddToPanel2(x){
     var listofformat = ['mp4','webm','avi','mov','flv','mkv'];   
     var image = document.getElementById('importedimage_modify')
     var video = document.getElementById('importedvideo_modify')
-
-    console.log(image);
-    console.log(video);
-
     if(image && !video){
-      console.log("Panel Image");
       if (x.src.split('.')[1] === listofformat.find(format => format === x.src.split('.')[1])){
-        console.log("Fichier vidéo");
         video = document.createElement('video')
         video.classList.add('importedimage')
         video.setAttribute('controls',"")
@@ -1495,20 +1516,16 @@ function PostChangeProfilePicture(x){
         video.style.border = "solid 4px #fd2d01"
         image.parentNode.replaceChild(video, image)
       }else{
-        console.log("Image");
         image.src = x.src;
         image.style.border = "solid 4px #fd2d01"
         image.classList.add("display_block")
       }
     }else{
-      console.log("Panel Vidéo");
       if ((x.src.split('.')[1] === listofformat.find(format => format === x.src.split('.')[1]))){
-        console.log("Fichier vidéo");
         video.src = x.src
         video.style.border = "solid 4px #fd2d01"
         video.classList.add("display_block")
       }else{
-        console.log("Image");
         image = document.createElement('img')
         image.setAttribute('id','importedimage_modify')
         image.classList.add('importedimage')
@@ -1533,42 +1550,48 @@ function fileAddToPanel3(x){
   var video = document.getElementById('importedvideo_modify')
   var [file] = fileinput.files;
 
-  if ([file.type][0].split('/')[0] === 'video'){
+  var listofformat= ['jpg','png','gif','webp','mp4','webm','avi','mov','flv','mkv'];
+
+  if (file.type.split('/')[1] === listofformat.find(format => format === file.type.split('/')[1])){   
+    if ([file.type][0].split('/')[0] === 'video'){
+        if(!image){
+          video.src = URL.createObjectURL(file)
+          video.style.border = "solid 4px #fd2d01"
+          video.classList.add("display_block")
+        }else{
+          video = document.createElement('video')
+          video.classList.add('importedimage')
+          video.setAttribute('controls',"")
+          video.setAttribute('id',"importedvideo_modify")
+          video.src = URL.createObjectURL(file)
+          video.classList.add("display_block")
+          image.parentNode.replaceChild(video, image)
+        }
+    }else{
+
       if(!image){
-        video.src = URL.createObjectURL(file)
-        video.style.border = "solid 4px #fd2d01"
-        video.classList.add("display_block")
-      }else{
-        video = document.createElement('video')
-        video.classList.add('importedimage')
-        video.setAttribute('controls',"")
-        video.setAttribute('id',"importedvideo_modify")
-        video.src = URL.createObjectURL(file)
-        video.classList.add("display_block")
-        image.parentNode.replaceChild(video, image)
+        image = document.createElement('img')
+        image.setAttribute('id','importedimage_modify')
+        image.classList.add('importedimage')
+        video.parentNode.replaceChild(image, video)
       }
-  }else{
+    
+      image.src = URL.createObjectURL(file)
 
-    if(!image){
-      image = document.createElement('img')
-      image.setAttribute('id','importedimage_modify')
-      image.classList.add('importedimage')
-      video.parentNode.replaceChild(image, video)
+      image.style.border = "solid 4px #fd2d01"
+      image.classList.add("display_block")
     }
-   
-    image.src = URL.createObjectURL(file)
 
-    image.style.border = "solid 4px #fd2d01"
-    image.classList.add("display_block")
+
+    document.getElementById('panel_modify_block').classList.add('panel_modify_block_extend')
+    document.getElementById('modify_textarea').classList.add('post_textarea_extended')
+    document.getElementById('container_file_modify').classList.add('display_none')
+    document.getElementById('opentrashicon_modify').classList.add('display_block')
+    document.getElementById('delete_file_modify').classList.add('display_block')
+    document.getElementById('addimage_text_modify').textContent = "Remplacer l'image";
+  }else{
+    Formatnotsupport(file.type.split('/')[1])
   }
-
-
-  document.getElementById('panel_modify_block').classList.add('panel_modify_block_extend')
-  document.getElementById('modify_textarea').classList.add('post_textarea_extended')
-  document.getElementById('container_file_modify').classList.add('display_none')
-  document.getElementById('opentrashicon_modify').classList.add('display_block')
-  document.getElementById('delete_file_modify').classList.add('display_block')
-  document.getElementById('addimage_text_modify').textContent = "Remplacer l'image";
 }
 
 

@@ -1066,6 +1066,11 @@ input::file-selector-button {
 
 }
 
+.commentary_text{
+   text-align: justify; 
+   overflow-wrap: break-word;
+}
+
 .option_container_commentary{
   position: absolute;
   top: 0px;
@@ -1296,6 +1301,7 @@ input::file-selector-button {
 
 .article p{
   text-align: justify;
+  overflow-wrap: break-word;
 }
 
 .likeandcomment_container {
