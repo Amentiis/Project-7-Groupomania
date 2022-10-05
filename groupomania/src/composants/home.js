@@ -18,9 +18,6 @@ import { faComments } from "@fortawesome/free-regular-svg-icons";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
-
 function Home_Panel() {
   const [rendered, setRendered] = useState(false);
   const [lastname, setlastname] = useState("");
@@ -137,7 +134,7 @@ function Home_Panel() {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    });
+  });
 
   //Notification de succès pour la suppression d'un poste  
   const succesnotifydelete = () => toast.success('Article supprimé !', {
@@ -149,7 +146,7 @@ function Home_Panel() {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    });
+  });
 
   //Notification de succès pour la modification d'un poste  
   const succesnotifymodify = () => toast.success('Article modifié !', {
@@ -161,7 +158,7 @@ function Home_Panel() {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    });
+  });
 
   //Notification de succès pour la publication d'un commentaire
   const succesnotifyCommentary = () => toast.success('Commentaire posté !', {
@@ -173,7 +170,7 @@ function Home_Panel() {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    });  
+  });  
 
    //Notification de succès pour la suppression d'un commentaire  
   const succesnotifyCommentarydelete = () => toast.success('Commentaire supprimé !', {
@@ -185,7 +182,7 @@ function Home_Panel() {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    });
+  });
 
   //Notification de succès pour la modification de l'image de profil 
   const succesnotifymodifyprofil = () => toast.success('Modification photo de profil effectué !', {
@@ -197,7 +194,7 @@ function Home_Panel() {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    });
+  });
 
   //Notification du non support de format de fichier
   const Formatnotsupport= (format) => toast.error(`Format .${format} non supporté` , {
@@ -209,7 +206,7 @@ function Home_Panel() {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    });  
+  });  
 
   //Notification de succès pour la modification de mot de passe 
   const succesnotifymodifypassword = () => toast.success('Mot de passe modifié , déconnexion', {
@@ -221,7 +218,7 @@ function Home_Panel() {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    });
+  });
 
   //Notification de d'erreur de mot de passe
   const errornotifymodifypassword = () => toast.error('Mot de passe incorrect!', {
@@ -233,7 +230,7 @@ function Home_Panel() {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    });
+  });
 
   //Notification d'erreur
   const errornotify = () => toast.error('Une erreur est survenu !', {
@@ -245,7 +242,7 @@ function Home_Panel() {
     draggable: true,
     progress: undefined,
     zindex : 9999,
-    });
+  });
 
   //Notification d'erreur de modification
   const errornotifymodify = () => toast.error('Erreur modification !', {
@@ -257,7 +254,7 @@ function Home_Panel() {
     draggable: true,
     progress: undefined,
     zindex : 9999,
-    });
+  });
 
   //Notification d'erreur de suppression
   const errornotifydelete = () => toast.error('Erreur suppresion !', {
@@ -269,10 +266,9 @@ function Home_Panel() {
     draggable: true,
     progress: undefined,
     zindex : 9999,
-    });
+  });
 
-
-//Quand l'utilisateur appuie sur echap cela ferme les panels ouvert
+  //Quand l'utilisateur appuie sur echap cela ferme les panels ouvert
   useEffect(() => {
     document.addEventListener("keydown", escFunction, false);
     return () => {
@@ -290,10 +286,6 @@ function Home_Panel() {
       hidepanelProfil();
     }
   }, []);
-
-
-
-
 
   //Récupération de tous les posts et affichage sur la page
   useEffect(() => {
@@ -710,7 +702,6 @@ function Home_Panel() {
     showDarkMode();
   } 
 
-
   //Fonction permettant la mise en place du système de like de la page
   function likeanddisliked(x){
     x.preventDefault()
@@ -774,8 +765,7 @@ function Home_Panel() {
     }
   }
 
-
-
+  //Fonction qui permet l'actualisation des posts quand il y a modification suppression ou ajout
   async function refreshPostInPage(value){
     await fetch("http://localhost:3000/api/post", {
       method: "GET",
@@ -801,6 +791,7 @@ function Home_Panel() {
   const navigate = useNavigate();
 
   const placeholder_textarea = 'Que souhaitez-vous dire, ' + firstname + " ?";
+
   return (
     <div className={(DarkModeOn === "true")? "body_home_darkmode" : "body_home"}>
       <header className={(DarkModeOn === "true")? "first_header_darkmode" : "first_header"}> 
@@ -1101,14 +1092,14 @@ function Home_Panel() {
     </div>
   );
 
+  //Permet de retourner à la page d'accueil en supprimant certains élements du localstorage
   function returntologinpage() {
     let keysToRemove = ["isLoggedIn", "userid","token"];
     keysToRemove.forEach(k =>localStorage.removeItem(k))
     navigate("/login");
   }
 
-
-
+  //Envoi la requête au backend pour publier un post
   function postPost (e){
     e.preventDefault();
     let data = new FormData();
@@ -1144,6 +1135,7 @@ function Home_Panel() {
         });
   }
 
+  //Envoi la requête au backend pour publier un commentaire
   function sendCommentary (e){
     e.preventDefault();
     const textareavalue = document.getElementById('commentary_textarea').value;
@@ -1178,7 +1170,7 @@ function Home_Panel() {
         });
   }
 
-
+  //Envoi la requête au backend pour modifier un post
   async function modifyPost (e){
    
     e.preventDefault();
@@ -1270,7 +1262,7 @@ function Home_Panel() {
     // }
   }
 
-
+  //Envoi la requête au backend pour supprimer un post
   function deletePost (e){
         e.preventDefault();
         if (e.target.closest('.article_container')){
@@ -1301,6 +1293,7 @@ function Home_Panel() {
         });
   }
 
+  //Envoi la requête au backend pour supprimer un commentaire
   function deleteComment (e){
     e.preventDefault();
     const userId = localStorage.getItem('userid')
@@ -1337,14 +1330,54 @@ function Home_Panel() {
     });
 }
 
+ //Envoi la requête au backend pour changement d'information personnel
+  function PostChangeOnProfil (e){
+    e.preventDefault();
+    var changeLastname = document.getElementById('change_lastname').value;
+    var changeFirstname = document.getElementById('change_firstname').value;
+    var confirmpassword = document.getElementById('confirmpassword').value;
+    if (confirmpassword){
+      fetch(`http://localhost:3000/api/auth/change/${localStorage.getItem('userid')}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          'Authorization': "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          lastname : changeLastname,
+          firstname : changeFirstname,
+          password : confirmpassword,
+        }),
+      })
+        .then(function (res) {
+          if (res.ok) {
+            succesnotifymodifyprofil();
+            //window.location.reload();
+            document.getElementById('profile_button').textContent = `${changeLastname} ${changeFirstname}`
+            document.getElementById('profile_firstname_lastname').textContent = `${changeLastname} ${changeFirstname}`
+            refreshPostInPage();
+            return res.json();
+          }
+          errornotify();
+        })
+        .then(function (value) {
+        
+        });
+    }else{
+      errornotify()
+    }
 
-function PostChangeOnProfil (e){
-  e.preventDefault();
-  var changeLastname = document.getElementById('change_lastname').value;
-  var changeFirstname = document.getElementById('change_firstname').value;
-  var confirmpassword = document.getElementById('confirmpassword').value;
-  if (confirmpassword){
-    fetch(`http://localhost:3000/api/auth/change/${localStorage.getItem('userid')}`, {
+
+  }
+
+ //Envoi la requête au backend pour changement de mot de passe
+  function PostChangePassword(e){
+    e.preventDefault();
+    var newpassword = document.getElementById('newpassword').value
+    var oldpassword = document.getElementById('oldpassword').value
+
+    fetch(`http://localhost:3000/api/auth/changepassword/${localStorage.getItem('userid')}`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -1352,107 +1385,66 @@ function PostChangeOnProfil (e){
         'Authorization': "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify({
-        lastname : changeLastname,
-        firstname : changeFirstname,
-        password : confirmpassword,
+        oldpassword : oldpassword,
+        newpassword : newpassword,
       }),
     })
       .then(function (res) {
         if (res.ok) {
-          succesnotifymodifyprofil();
-          //window.location.reload();
-          document.getElementById('profile_button').textContent = `${changeLastname} ${changeFirstname}`
-          document.getElementById('profile_firstname_lastname').textContent = `${changeLastname} ${changeFirstname}`
-          refreshPostInPage();
+          succesnotifymodifypassword();
+          let keysToRemove = ["isLoggedIn", "userid","token"];
+          keysToRemove.forEach(k =>localStorage.removeItem(k))
+          setTimeout(function () {
+            window.location.reload();
+          }, 4000);
           return res.json();
         }
-        errornotify();
+        errornotifymodifypassword();
       })
       .then(function (value) {
-       
+      
       });
-  }else{
-    errornotify()
   }
+ //Envoi la requête au backend pour changement de photo de profil
+  function PostChangeProfilePicture(x){
+    let data = new FormData();
+    var fileinputPicture =  x.target;
+    const image = fileinputPicture.files[0];
 
+    var listofformat= ['jpg','png','gif','webp'];
 
-}
-
-
-function PostChangePassword(e){
-  e.preventDefault();
-  var newpassword = document.getElementById('newpassword').value
-  var oldpassword = document.getElementById('oldpassword').value
-
-  fetch(`http://localhost:3000/api/auth/changepassword/${localStorage.getItem('userid')}`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      'Authorization': "Bearer " + localStorage.getItem("token"),
-    },
-    body: JSON.stringify({
-      oldpassword : oldpassword,
-      newpassword : newpassword,
-    }),
-  })
-    .then(function (res) {
-      if (res.ok) {
-        succesnotifymodifypassword();
-        let keysToRemove = ["isLoggedIn", "userid","token"];
-        keysToRemove.forEach(k =>localStorage.removeItem(k))
-        setTimeout(function () {
-          window.location.reload();
-        }, 4000);
-        return res.json();
-      }
-      errornotifymodifypassword();
-    })
-    .then(function (value) {
-     
-    });
-}
-
-
-function PostChangeProfilePicture(x){
-  let data = new FormData();
-  var fileinputPicture =  x.target;
-  const image = fileinputPicture.files[0];
-
-  var listofformat= ['jpg','png','gif','webp'];
-
-  if (image.type.split('/')[1] === listofformat.find(format => format === image.type.split('/')[1])){
-    if(image){
-      data.append('_id' , localStorage.getItem('userid'))
-      data.append('image', image);
-    
-      fetch(`http://localhost:3000/api/auth/changeProfilePicture`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          'Authorization': "Bearer " + localStorage.getItem("token"),
-        },
-        body: data
-      })
-        .then(function (res) {
-          if (res.ok) {
-            succesnotifymodifyprofil();
-            refreshPostInPage();
-    
-            return res.json();
-          }
-          errornotify();
+    if (image.type.split('/')[1] === listofformat.find(format => format === image.type.split('/')[1])){
+      if(image){
+        data.append('_id' , localStorage.getItem('userid'))
+        data.append('image', image);
+      
+        fetch(`http://localhost:3000/api/auth/changeProfilePicture`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            'Authorization': "Bearer " + localStorage.getItem("token"),
+          },
+          body: data
         })
-        .then(function (value) {
-         document.getElementById('profileImg').src = value.iconurl     
-        });
+          .then(function (res) {
+            if (res.ok) {
+              succesnotifymodifyprofil();
+              refreshPostInPage();
+      
+              return res.json();
+            }
+            errornotify();
+          })
+          .then(function (value) {
+          document.getElementById('profileImg').src = value.iconurl     
+          });
+      }
+    }else{
+      Formatnotsupport(image.type.split('/')[1])
     }
-  }else{
-    Formatnotsupport(image.type.split('/')[1])
   }
-}
 
-
+  //Ajout de fichier vidéo et image à la création de post
   function fileAddToPanel(x){
     var fileinput =  x.target;
     var filename = fileinput.files[0].name;
@@ -1504,6 +1496,7 @@ function PostChangeProfilePicture(x){
     }
   }
 
+  //Ajout de fichier seulement avec des vidéos dans modificaton de post
   function fileAddToPanel2(x){
     var listofformat = ['mp4','webm','avi','mov','flv','mkv'];   
     var image = document.getElementById('importedimage_modify')
@@ -1545,9 +1538,10 @@ function PostChangeProfilePicture(x){
     document.getElementById('opentrashicon_modify').classList.add('display_block')
     document.getElementById('delete_file_modify').classList.add('display_block')
     document.getElementById('addimage_text_modify').textContent = "Remplacer l'image";
-}
+  }
 
-function fileAddToPanel3(x){
+  //Ajout de fichier vidéo et image modification de post
+  function fileAddToPanel3(x){
   var fileinput =  x.target;
   var image = document.getElementById('importedimage_modify')
   var video = document.getElementById('importedvideo_modify')
@@ -1595,10 +1589,9 @@ function fileAddToPanel3(x){
   }else{
     Formatnotsupport(file.type.split('/')[1])
   }
-}
+  }
 
-
-
+  //Evenement OnChange sur le textarea tant que aucun text le bouton de publication est désactivé
   function textareaIsClicked(){
     if(!(document.getElementById('post_textarea').value === "")){
       document.getElementById('publish_button').classList.add('text_area_clicked')
@@ -1609,6 +1602,7 @@ function fileAddToPanel3(x){
     }
   }
 
+  //Evenement OnChange sur le textarea tant que aucun text le bouton de publication est désactivé
   function textareaIsClickedModify(){
     if(!(document.getElementById('modify_textarea').value === "")){
       document.getElementById('publish_button_modify').classList.add('text_area_clicked')
@@ -1619,7 +1613,7 @@ function fileAddToPanel3(x){
     }
   }
 
-  
+  //Evenement OnChange sur le textarea tant que aucun text le bouton de publication est désactivé
   function textareaIsClickedCommentary(){
     if(!(document.getElementById('commentary_textarea').value === "")){
       document.getElementById('publish_button_commentary').classList.add('text_area_clicked')
@@ -1630,6 +1624,7 @@ function fileAddToPanel3(x){
     }
   }
 
+  //Ouvre le menu de deconnexion
   function opendisconnect() {
     if (!document.getElementById("profile_button").classList.contains("disabled_profile")){
       document.getElementById("profile_button").classList.add("disabled_profile");
@@ -1654,6 +1649,7 @@ function fileAddToPanel3(x){
     }
   }
 
+  //Ouvre le panel de publication de post
   function showpanelpost() {
     if (document.getElementById("container_panel_post").classList.contains("container_panel_post_active")){
       document.getElementById("container_panel_post").classList.remove("container_panel_post_active");
@@ -1661,7 +1657,9 @@ function fileAddToPanel3(x){
       document.getElementById("container_panel_post").classList.add("container_panel_post_active");
     }
   }
-  
+
+
+  //Ferme le panel de publication de post
   function hidepanelpost() {
     if (document.getElementById("container_panel_post").classList.contains("container_panel_post_active")){
       document.getElementById("container_panel_post").classList.remove("container_panel_post_active");
@@ -1672,8 +1670,9 @@ function fileAddToPanel3(x){
         }
         document.getElementById("post_textarea").value = "";
   }
-}
+  }
 
+  //Ouvre le panel de modification de post
   function showpanelModify(x){
     var imageurlmodify;
     var  oldtext = x.target.closest(".article").querySelector('p').textContent
@@ -1700,6 +1699,7 @@ function fileAddToPanel3(x){
     }
   }
 
+  //Ferme le panel de modification de post
   function hidepanelModify(){
     if (document.getElementById("container_panel_modify").classList.contains("container_panel_modify_active")){
       document.getElementById("container_panel_modify").classList.remove("container_panel_modify_active");
@@ -1711,9 +1711,10 @@ function fileAddToPanel3(x){
         document.getElementById("post_textarea").value = "";
     }
   }
+
+  //Ouvre le panel de création de commentaire
   function showpanelCommentary(e) {
     setcommentshow(e.target.parentElement.parentElement.parentElement.dataset.id)
-
     if(e.target.closest(".article_container")){
       setpostId((e.target.closest(".article_container").dataset.id));
     }else{
@@ -1727,38 +1728,36 @@ function fileAddToPanel3(x){
     }
   }
 
+  //Ferme le panel de création de commentaire
+  function hidepanelCommentary() {
+    if (document.getElementById("container_panel_commentary").classList.contains("container_panel_commentary_active")){
+      document.getElementById("container_panel_commentary").classList.remove("container_panel_commentary_active");
+        if(!(document.getElementById('commentary_textarea').value === "")){
+          document.getElementById('publish_button').disabled = false; 
+          document.getElementById('publish_button').classList.remove('text_area_clicked');
+        }
+        document.getElementById("commentary_textarea").value = "";
+    }
+  }
+
+  //Ouvre le panel de profil de l'utilisateur
   function showpanelProfil() {
-    if (document.getElementById("container_panel_profil").classList.contains("container_panel_profil_active")){
-      document.getElementById("container_panel_profil").classList.remove("container_panel_profil_active");
-    } else {
-      document.getElementById("container_panel_profil").classList.add("container_panel_profil_active");
-    }
-  }
-
-  function hidepanelProfil() {
-    if (document.getElementById("container_panel_profil").classList.contains("container_panel_profil_active")){
-      document.getElementById("container_panel_profil").classList.remove("container_panel_profil_active");
-    }
-  }
-
-
-
-  
-}
-
-
-
-function hidepanelCommentary() {
-  if (document.getElementById("container_panel_commentary").classList.contains("container_panel_commentary_active")){
-    document.getElementById("container_panel_commentary").classList.remove("container_panel_commentary_active");
-      if(!(document.getElementById('commentary_textarea').value === "")){
-        document.getElementById('publish_button').disabled = false; 
-        document.getElementById('publish_button').classList.remove('text_area_clicked');
+      if (document.getElementById("container_panel_profil").classList.contains("container_panel_profil_active")){
+        document.getElementById("container_panel_profil").classList.remove("container_panel_profil_active");
+      } else {
+        document.getElementById("container_panel_profil").classList.add("container_panel_profil_active");
       }
-      document.getElementById("commentary_textarea").value = "";
+  }
+
+  //Ferme le panel de profil de l'utilisateur
+  function hidepanelProfil() {
+      if (document.getElementById("container_panel_profil").classList.contains("container_panel_profil_active")){
+        document.getElementById("container_panel_profil").classList.remove("container_panel_profil_active");
+      }
   }
 }
 
+//Ouvre le sous menu de changement de donnée personnel
 function menupersonnaldata(x){
   if(!(x.target.classList.contains('clicked'))){
     x.target.classList.add('clicked')
@@ -1769,6 +1768,7 @@ function menupersonnaldata(x){
 
 }
 
+//Ouvre le sous menu de changement de mot de passe
 function menupassword(x){
   if(!(x.target.classList.contains('clicked'))){
     x.target.classList.add('clicked')
@@ -1778,8 +1778,7 @@ function menupassword(x){
   }
 }
 
-
-
+//Permet la suppression du fichier dans le fileinput à la création d'un post
 function resetFile(){
   const fileinput = document.getElementById('file_input');
   fileinput.value = "";
@@ -1806,9 +1805,8 @@ function resetFile(){
  
 }
 
+//Permet la suppression du fichier dans le fileinput à la modification d'un post
 function resetFile2(){
-
- 
   if(document.getElementById('importedimage_modify')){
     document.getElementById('importedimage_modify').src = ""
     document.getElementById('importedimage_modify').classList.remove("display_block")
@@ -1836,9 +1834,5 @@ function resetFile2(){
 
 
 }
-
-
-
-
 
 export default Home_Panel;

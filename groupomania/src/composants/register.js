@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import background_image from "../assets/corporarte-banner.jpg";
 
 function Register_Panel() {
-
   const [rendered, setRendered] = useState(false);
   useEffect(() => {
     if(rendered){
@@ -18,9 +17,7 @@ function Register_Panel() {
 },[rendered]);
 
 const navigate = useNavigate();
-// if (!localStorage.getItem('isLoggedIn') === false || localStorage.getItem('isLoggedIn') === null ){
-//   navigate("/accueil");
-// }
+
   const messageErrorInvalidMail = `L'email rempli ne respecte pas le format obligatoire`;
   const messageErrorMail = `Problème à la création du compte, cela peut venir d'un compte déjà existant ou d'un problème serveur `;
  
