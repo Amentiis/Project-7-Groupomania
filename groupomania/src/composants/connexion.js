@@ -47,11 +47,9 @@ function Connexion_Panel() {
     })
       .then(function (res) {
         if (res.ok) {
-          console.log("connexion réussi");
           succeslogin(e.target["email"].value);
           return res.json();
         }
-        console.log("connexion échoué");
         errorlogin();
         
       })

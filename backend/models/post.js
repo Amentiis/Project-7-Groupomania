@@ -7,9 +7,7 @@ const postSchema = mongoose.Schema({
   text : { type: String, required: true },
   imageUrl: { type: String, required: false },
   likes: { type: Number, required: false },
-  dislikes: { type: Number, required: false },
   usersLiked: { type: [], required: false },
-  usersDisliked: { type: [], required: false },
   date : { type: String, required : true },
   commentary_list: { type: [{
     _id : {type : Object},

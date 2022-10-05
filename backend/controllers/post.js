@@ -126,16 +126,7 @@ exports.GetSpecifyPost = (req, res, next) => {
              $push: { usersLiked: req.body.userId },
              _id: req.params.id
           })
-        .then(() => res.status(200).json({ message: 'post like !'}))
-        .catch(error => res.status(400).json({ error }));
-        break;
-        case -1 :
-          Post.updateOne({ _id: req.params.id }, {
-            $inc: { dislikes: 1 },
-            $push: { usersDisliked: req.body.userId },
-            _id: req.params.id
-          })
-        .then(() => res.status(200).json({ message: 'post dislike  !'}))
+        .then(() => res.status(200).json({ message: 'Liked'}))
         .catch(error => res.status(400).json({ error }));
         break;
         case 0:
@@ -147,15 +138,7 @@ exports.GetSpecifyPost = (req, res, next) => {
                   $pull: { usersLiked: req.body.userId },
                   _id: req.params.id
                 })
-                  .then(() => { res.status(201).json({ message: 'Ton avis a été pris en compte!' }); })
-                  .catch((error) => { res.status(400).json({ error}); });
-              } else if (post.usersDisliked.find(user => user === req.body.userId)) {
-                Post.updateOne({ _id: req.params.id }, {
-                  $inc: { dislikes: -1 },
-                  $pull: { usersDisliked: req.body.userId },
-                  _id: req.params.id
-                })
-                  .then(() => { res.status(201).json({ message: 'Ton avis a été pris en compte!' }); })
+                  .then(() => { res.status(201).json({ message: 'Like remove' }); })
                   .catch((error) => { res.status(400).json({ error}); });
               }
             })

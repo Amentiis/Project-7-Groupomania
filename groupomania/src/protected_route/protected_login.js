@@ -9,7 +9,6 @@ const ProtectedLogin = () => {
 
 
   if(isLoggedIn && userid && token){
-    console.log(isLoggedIn)
     return(<Navigate to="/accueil" replace state={{ from: location }} />)
   }else{
     return (<Login />);

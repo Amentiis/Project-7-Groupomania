@@ -33,14 +33,14 @@ function Home_Panel() {
   var [commentshow, setcommentshow] = useState("");
 
 
-
+  //Si l'utilisateur a activé le mode sombre il s'active au chargement de la page
   function showDarkMode(){
     if(localStorage.getItem('darkModeOn') === 'true'){
       EnableDarkMode();
     }
   }
 
-
+  //Si l'utilisateur a activé le mode sombre il s'active au chargement de la page
   function EnableDarkMode() {
     document.getElementById("enabledarkmod").checked = true;
     document.getElementById('panel_profil_block').classList.add('darkmode');
@@ -65,7 +65,7 @@ function Home_Panel() {
        // document.querySelectorAll(`.article_container`).forEach(element => element.classList.add('darkmode_article'));
   }
 
-
+  //Action sur le bouton permettant d'activer ou de désactivé le mode sombre
   function darkmodtoggle() {
     if(localStorage.getItem('darkModeOn') === 'true'){
       localStorage.setItem('darkModeOn',false)
@@ -127,6 +127,7 @@ function Home_Panel() {
     }
   }
 
+  //Notification de succès pour la publication d'un poste
   const succesnotify = () => toast.success('Article posté !', {
     position: "bottom-right",
     className : 'succes_notify',
@@ -138,6 +139,7 @@ function Home_Panel() {
     progress: undefined,
     });
 
+  //Notification de succès pour la suppression d'un poste  
   const succesnotifydelete = () => toast.success('Article supprimé !', {
     position: "bottom-right",
     className : 'succes_notify',
@@ -149,6 +151,7 @@ function Home_Panel() {
     progress: undefined,
     });
 
+  //Notification de succès pour la modification d'un poste  
   const succesnotifymodify = () => toast.success('Article modifié !', {
     position: "bottom-right",
     className : 'succes_notify',
@@ -160,6 +163,7 @@ function Home_Panel() {
     progress: undefined,
     });
 
+  //Notification de succès pour la publication d'un commentaire
   const succesnotifyCommentary = () => toast.success('Commentaire posté !', {
     position: "bottom-right",
     className : 'succes_notify',
@@ -171,8 +175,7 @@ function Home_Panel() {
     progress: undefined,
     });  
 
-
-    
+   //Notification de succès pour la suppression d'un commentaire  
   const succesnotifyCommentarydelete = () => toast.success('Commentaire supprimé !', {
     position: "bottom-right",
     className : 'succes_notify',
@@ -184,6 +187,7 @@ function Home_Panel() {
     progress: undefined,
     });
 
+  //Notification de succès pour la modification de l'image de profil 
   const succesnotifymodifyprofil = () => toast.success('Modification photo de profil effectué !', {
     position: "bottom-right",
     className : 'succes_notify',
@@ -195,7 +199,8 @@ function Home_Panel() {
     progress: undefined,
     });
 
-  const Formatnotsupport= (format) => toast.success(`Format .${format} non supporté` , {
+  //Notification du non support de format de fichier
+  const Formatnotsupport= (format) => toast.error(`Format .${format} non supporté` , {
     position: "bottom-right",
     className : 'succes_notify',
     autoClose: 3000,
@@ -206,6 +211,7 @@ function Home_Panel() {
     progress: undefined,
     });  
 
+  //Notification de succès pour la modification de mot de passe 
   const succesnotifymodifypassword = () => toast.success('Mot de passe modifié , déconnexion', {
     position: "bottom-right",
     className : 'succes_notify',
@@ -217,6 +223,7 @@ function Home_Panel() {
     progress: undefined,
     });
 
+  //Notification de d'erreur de mot de passe
   const errornotifymodifypassword = () => toast.error('Mot de passe incorrect!', {
     position: "bottom-right",
     className : 'succes_notify',
@@ -228,7 +235,7 @@ function Home_Panel() {
     progress: undefined,
     });
 
-
+  //Notification d'erreur
   const errornotify = () => toast.error('Une erreur est survenu !', {
     position: "bottom-right",
     autoClose: 3000,
@@ -240,6 +247,7 @@ function Home_Panel() {
     zindex : 9999,
     });
 
+  //Notification d'erreur de modification
   const errornotifymodify = () => toast.error('Erreur modification !', {
     position: "bottom-right",
     autoClose: 3000,
@@ -251,6 +259,7 @@ function Home_Panel() {
     zindex : 9999,
     });
 
+  //Notification d'erreur de suppression
   const errornotifydelete = () => toast.error('Erreur suppresion !', {
     position: "bottom-right",
     autoClose: 3000,
@@ -263,6 +272,13 @@ function Home_Panel() {
     });
 
 
+//Quand l'utilisateur appuie sur echap cela ferme les panels ouvert
+  useEffect(() => {
+    document.addEventListener("keydown", escFunction, false);
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+    };
+  },);
 
   const escFunction = useCallback((event) => {
     if (event.key === "Escape") {
@@ -278,6 +294,8 @@ function Home_Panel() {
 
 
 
+
+  //Récupération de tous les posts et affichage sur la page
   useEffect(() => {
     localStorage.removeItem("email");
     const userid = localStorage.getItem("userid");
@@ -299,12 +317,8 @@ function Home_Panel() {
           }else if(res.status === 401){
             returntologinpage();
           }
-         
-          
-
         })
         .then(function (value) {
-          console.log(value);
           setlastname(value.lastname);
           setfirstname(value.firstname);
           if (value.iconurl){
@@ -312,10 +326,8 @@ function Home_Panel() {
           }else{
             setprofile_picture(defaultProfilPicture)
           }
-          
           setisAdministrator(value.isAdministrator)
           refreshPostInPage(value.isAdministrator);
-          
           if(!localStorage.getItem('notifyOff') === true){
             if(lastname && firstname){
               localStorage.setItem('darkModeOn',false)
@@ -339,14 +351,7 @@ function Home_Panel() {
     // eslint-disable-next-line
   }, [rendered,lastname,firstname,profile_picture]);
 
-  useEffect(() => {
-    document.addEventListener("keydown", escFunction, false);
-    return () => {
-      document.removeEventListener("keydown", escFunction, false);
-    };
-  },);
-
-
+  //Retourne le Panel d'option du post si le post appartient à l'utilisateur ou si l'utilisateur est un administrateur
   function OptionPanel(props) {
     const itsYourPost = props.itsYourPost;
     if (itsYourPost) {
@@ -371,6 +376,7 @@ function Home_Panel() {
     return "";
   }
 
+  //Retourne le Panel d'option du commentaire si le commentaire appartient à l'utilisateur ou si l'utilisateur est un administrateur
   function OptionPanelCommentary(props) {
     const itsYourComment = props.itsYourComment;
     if (itsYourComment) {
@@ -391,12 +397,11 @@ function Home_Panel() {
     return "";
   }
 
+  //Action effectué dans l'utilisateur appuie sur le bouton pour ouvrir le menu d'option d'un post
   function showOptionPanel(x){
-
     if(x){
     var option_panel = x.target.parentElement.parentElement.querySelector('.option_panel');
     var text = x.target.parentElement.parentElement.querySelector('ul');
-
     if (!(option_panel.classList.contains('option_panel_show'))){
       option_panel.classList.add('option_panel_show');
       option_panel.classList.remove('option_panel_show_reverse');
@@ -416,7 +421,7 @@ function Home_Panel() {
     });
     }  
   }
-
+  //Action effectué dans l'utilisateur appuie sur le bouton pour ouvrir le menu d'option d'un commentaire
   function showOptionPanel_commentary(x){
     if(x){
       var option_panel = x.target.parentElement.parentElement.querySelector('.option_panel_commentary');
@@ -445,6 +450,7 @@ function Home_Panel() {
       
   }
 
+  //Permet lors d'une publication de commentaire d'ouvrir l'onglet des commentaires correspondant
   function openCommentary(){
     if(commentshow){
       document.querySelector(`[data-id='${commentshow}']`).querySelector('.commentary_container').classList.add('commentary_open'); 
@@ -453,16 +459,14 @@ function Home_Panel() {
     }
   }
 
-
+  //Action effectué dans l'utilisateur appuie sur le bouton pour ouvrir et fermer l'onglet des commantaires d'un post
   function openAndCloseCommentary(x){
-
     if(x.target.closest('.article_container')){
       var commentary_container = x.target.closest('.article_container').querySelector('.commentary_container');
     }else{
       commentary_container = x.target.closest('.darkmode_article').querySelector('.commentary_container');
     }
-   
-
+  
    if (!(commentary_container.classList.contains('commentary_open'))){
     commentary_container.classList.add('commentary_open');
     commentary_container.classList.remove('commentary_close');
@@ -473,6 +477,7 @@ function Home_Panel() {
   }
   }
 
+  //Fonction qui permet de récupérer tous les posts et de les créer à l'intérieur de la page à l'aide de createElement et de react render
   async function displayPostOnScreen(allposts,Administrator){
 
     allposts = allposts.reverse();
@@ -522,8 +527,6 @@ function Home_Panel() {
       var main_container = document.getElementById('main_container');
       var article_container = document.createElement('div');
 
-      
-      console.log(DarkModeOn);
       if(DarkModeOn === 'true'){
         article_container.classList.add("darkmode_article");
       }else{
@@ -708,7 +711,7 @@ function Home_Panel() {
   } 
 
 
-  
+  //Fonction permettant la mise en place du système de like de la page
   function likeanddisliked(x){
     x.preventDefault()
     if(x.target.parentElement.closest(".article_container")){
