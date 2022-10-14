@@ -84,9 +84,9 @@ function Home_Panel() {
     document.getElementsByClassName('input_file_icon_container')[0].classList.toggle('input_darkmode');
     document.getElementsByClassName('button_apply')[0].classList.toggle('button_darkmode');
     document.getElementsByClassName('button_apply_password')[0].classList.toggle('button_darkmode');
-    document.getElementById('container_panel_post').classList.add('darkmode_post');
-    document.getElementById('container_panel_modify').classList.add('darkmode_modify');
-    document.getElementById('container_panel_commentary').classList.add('darkmode_comment');
+    document.getElementById('container_panel_post').classList.toggle('darkmode_post');
+    document.getElementById('container_panel_modify').classList.toggle('darkmode_modify');
+    document.getElementById('container_panel_commentary').classList.toggle('darkmode_comment');
 
     if((document.querySelectorAll(`.article_container`).length) !== 0){
       document.querySelectorAll(`.article_container`).forEach(element => element.classList.add('darkmode_article'));
@@ -511,6 +511,7 @@ function Home_Panel() {
       .then(function (data) {
         return data
       });
+      
       var author_firstname = data.firstname;
       var author_lastname = data.lastname;  
       var author_profile_picture = data.iconurl;  
@@ -647,9 +648,11 @@ function Home_Panel() {
       .then(function (data) {
         return data
       });
+
       var author_commentary_firstname =  data.firstname;
       var author_commentary_lastname = data.lastname;
       var author_commentary_profilepicture =  data.iconurl;
+      var author_commentary_isadministrator =  data.isadministrator
 
         var commentary = document.createElement('div');
         commentary.classList.add('commentary');
@@ -662,7 +665,13 @@ function Home_Panel() {
        
         var profile_icon = document.createElement('img');
         profile_icon.classList.add('profile_icon')
-        profile_icon.src = author_commentary_profilepicture;
+
+        if (author_commentary_profilepicture !== ""){
+          profile_icon.setAttribute('src',author_commentary_profilepicture)
+        }else{
+          profile_icon.setAttribute('src',defaultProfilPicture)
+        }
+
         author_information.appendChild(profile_icon)
         
         var authorAndDate = document.createElement('div')
@@ -671,7 +680,7 @@ function Home_Panel() {
 
         var author_name = document.createElement('p');
         author_name.classList.add("author_name");
-        author_name.innerHTML = `Poste de <span> ${author_commentary_lastname} ${author_commentary_firstname} <span>`;
+        author_name.innerHTML = author_commentary_isadministrator? `Commentaire de <span class="author_name_post">  ${author_commentary_lastname} ${author_commentary_firstname} <i class="fa-solid fa-star"></i> `  : `Commentaire de <span>  ${author_commentary_lastname} ${author_commentary_firstname}`
         authorAndDate.appendChild(author_name);
 
         var commentary_date_element = document.createElement('p')
@@ -1411,7 +1420,7 @@ function Home_Panel() {
     var fileinputPicture =  x.target;
     const image = fileinputPicture.files[0];
 
-    var listofformat= ['jpg','png','gif','webp'];
+    var listofformat= ['jpeg','jpg','png','gif','webp'];
 
     if (image.type.split('/')[1] === listofformat.find(format => format === image.type.split('/')[1])){
       if(image){
@@ -1453,7 +1462,7 @@ function Home_Panel() {
     var video = document.getElementById('importedvideo')
     var [file] = fileinput.files;
 
-    var listofformat= ['jpg','png','gif','webp','mp4','webm','avi','mov','flv','mkv'];
+    var listofformat= ['jpeg','jpg','png','gif','webp','mp4','webm','avi','mov','flv','mkv'];
 
     if (file.type.split('/')[1] === listofformat.find(format => format === file.type.split('/')[1])){
       if ([file.type][0].split('/')[0] === 'video'){
@@ -1547,7 +1556,7 @@ function Home_Panel() {
   var video = document.getElementById('importedvideo_modify')
   var [file] = fileinput.files;
 
-  var listofformat= ['jpg','png','gif','webp','mp4','webm','avi','mov','flv','mkv'];
+  var listofformat= ['jpeg','jpg','png','gif','webp','mp4','webm','avi','mov','flv','mkv'];
 
   if (file.type.split('/')[1] === listofformat.find(format => format === file.type.split('/')[1])){   
     if ([file.type][0].split('/')[0] === 'video'){

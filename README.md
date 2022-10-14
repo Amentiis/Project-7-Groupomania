@@ -15,6 +15,7 @@ Pour faire fonctionner le projet au mieux il vous suffit de :
 - cd **backend**:
   - Chargez le package `nodemon` : `npm install -g nodemon`
   - Chargez les packages avec : `npm install`
+  - Créer un dossier `image` puis un dossier `profilepicture` à l'intérieur
 - cd **groupomania**
   - Chargez les packages avec : `npm install`
 
