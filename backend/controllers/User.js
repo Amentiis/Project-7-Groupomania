@@ -146,7 +146,7 @@ exports.login = (req, res, next) => {
     }
     User.findOne({ _id: req.body._id})
     .then(user => {
-      if ((user._id != req.auth.userId) && (req.auth.userId != '6332f583a71cc6f7749d2080')) {
+      if ((user._id != req.auth.userId) && (req.auth.userId != process.env.ADMIN_USER_ID)) {
             res.status(401).json({message: 'Not authorized'});
         } else {
             if (user.iconurl){

@@ -1,6 +1,6 @@
 const Post = require('../models/post')
 const fs = require('fs')
-
+require("dotenv").config();
 var mongoose = require('mongoose');
 
 
@@ -93,7 +93,7 @@ exports.DeleteComment = (req, res, next) => {
         break
       }
     }
-      if ((post.userId != req.auth.userId) && (req.auth.userId != '6332f583a71cc6f7749d2080') && !itsmypost) {
+      if ((post.userId != req.auth.userId) && (req.auth.userId != process.env.ADMIN_USER_ID) && !itsmypost) {
       res.status(401).json({message: 'Not authorized'});
       } else {
           Post.updateOne({_id: req.params.id}, {$pull: {commentary_list: {_id: commentId}}})

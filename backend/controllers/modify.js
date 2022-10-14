@@ -1,5 +1,6 @@
 const Post = require('../models/post')
 const fs = require('fs')
+require("dotenv").config();
 
 
 exports.ModifyPost =  (req, res, next) => {
@@ -15,7 +16,7 @@ exports.ModifyPost =  (req, res, next) => {
 
   Post.findOne({ _id: req.params.id})
   .then(post => {
-    if ((post.userId != req.auth.userId) && (req.auth.userId != '6332f583a71cc6f7749d2080')) {
+    if ((post.userId != req.auth.userId) && (req.auth.userId != process.env.ADMIN_USER_ID)) {
           res.status(401).json({message: 'Not authorized'});
       }else{
         if(req.body.imageexiste){

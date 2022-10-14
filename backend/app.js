@@ -2,13 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
+require("dotenv").config();
 
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const modifyRoutes = require('./routes/modify');
 const commentRoutes = require('./routes/comment');
 
-mongoose.connect(`mongodb+srv://amentiis:openclassroom@cluster0.ab4tqtw.mongodb.net/Groupomania`,
+mongoose.connect(`${process.env.BDD_LOGIN}`,
 
   { useNewUrlParser: true,
     useUnifiedTopology: true })
