@@ -17,7 +17,8 @@
 }
 
 .Toastify__toast--success{
-  width: 460px;
+  width: 340px;
+  text-align: center;
 }
 
 textarea:focus,
