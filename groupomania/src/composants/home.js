@@ -1,6 +1,6 @@
 import "../styles/home_panel.css";
 import "../styles/all.min.css";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback} from "react";
 import ReactDOM from 'react-dom/client'
 import { useNavigate } from "react-router";
 import logo from "../assets/logo.svg";
@@ -23,6 +23,7 @@ function Home_Panel() {
   const [lastname, setlastname] = useState("");
   const [firstname, setfirstname] = useState("");
   const [isAdministrator, setisAdministrator] = useState(false);
+
   const [profile_picture, setprofile_picture] = useState("");
   const [DarkModeOn, setDarkModeOn] = useState(localStorage.getItem('darkModeOn'));
   const [postId, setpostId] = useState("");
@@ -472,6 +473,26 @@ function Home_Panel() {
   //Fonction qui permet de récupérer tous les posts et de les créer à l'intérieur de la page à l'aide de createElement et de react render
   async function displayPostOnScreen(allposts,Administrator){
 
+    let propsAdministrator = await fetch("http://localhost:3000/api/auth/get", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          'Authorization': "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          _id: localStorage.getItem('userid'),
+        }),
+      })
+        .then(function (res) {
+          if (res.ok) {
+            return res.json();
+          }
+        })
+        .then(function (value) {
+          return value.isAdministrator
+        });
+
     allposts = allposts.reverse();
     for(let post in allposts){
       var author_id = allposts[post].userId;
@@ -584,7 +605,7 @@ function Home_Panel() {
                 <FontAwesomeIcon className="icon_comment" icon={faComments}/>
                 <button type="button">Commentaire</button>
               </div>
-              <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator || Administrator)} />
+              <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator || Administrator || propsAdministrator)} />
               </form>
           </div>
         );
@@ -601,7 +622,7 @@ function Home_Panel() {
               <FontAwesomeIcon className="icon_comment" icon={faComments}/>
               <button type="button">Commentaire</button>
             </div>
-            <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator || Administrator)} />
+            <OptionPanel itsYourPost={((author_id === localStorage.getItem('userid')) || isAdministrator || Administrator || propsAdministrator)} />
            </form>
         </div>
         );
@@ -1231,44 +1252,6 @@ function Home_Panel() {
         .then(function (value) {
          
         });
-
-
-
-            // function imageexiste (){
-    //     let url = input.src
-    //     var testest;
-    //     const toDataURL = url => fetch(url)
-    //     .then(response => response.blob())
-    //     .then(blob => new Promise((resolve, reject) => {
-    //     const reader = new FileReader()
-    //     reader.onloadend = () => resolve(reader.result)
-    //     reader.onerror = reject
-    //     reader.readAsDataURL(blob)
-    //     }))
-    //     function dataURLtoFile(dataurl, filename) {
-    //       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-    //       bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    //       while(n--){
-    //       u8arr[n] = bstr.charCodeAt(n);
-    //       }
-    //      return new File([u8arr], filename, );
-    //     }
-    //     toDataURL(url)
-    //     .then(dataUrl => {
-    //       var fileData = dataURLtoFile(dataUrl, "imageName");
-    //       testest = fileData
-    //     })
-    //     return new Promise(resolve => {
-    //       setTimeout(() => {
-    //         resolve(testest);
-    //       }, 2000);
-    //     });
-    //  }
-
-
-    // if(!image && input.src !=  "http://localhost:3001/accueil" ){
-    //   data.append('image', await imageexiste());
-    // }
   }
 
   //Envoi la requête au backend pour supprimer un post
