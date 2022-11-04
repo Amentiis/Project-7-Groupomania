@@ -541,7 +541,7 @@ function Home_Panel() {
       var main_container = document.getElementById('main_container');
       var article_container = document.createElement('div');
 
-      if(DarkModeOn === 'true'){
+      if(localStorage.getItem('darkModeOn') === 'true'){ 
         article_container.classList.add("darkmode_article");
       }else{
         article_container.classList.add("article_container");
@@ -829,7 +829,7 @@ function Home_Panel() {
           <div className="left">
             <img src={logo} alt="Logo Groupomania" className="logo" />
           </div>
-          <div className="right">
+          <div className={(DarkModeOn === "true")? "right input_darkmode" : "right"}> 
             <button onClick={showpanelpost} className="createpost">
               Créer un nouveau post
             </button>
@@ -858,7 +858,7 @@ function Home_Panel() {
         </div>
       </header>
       <main id="main">
-        <div id="container_panel_post" className="container_panel_post">
+        <div id="container_panel_post" className={(DarkModeOn === "true")? "container_panel_post darkmode_post" : "container_panel_post"}> 
           <div id="panel_post_block" className="panel_post_block">
             <form className="panel_post" onSubmit={postPost}>
               <div className="header_panel">
@@ -916,7 +916,7 @@ function Home_Panel() {
             </form>
           </div>
         </div>
-        <div id="container_panel_modify" className="container_panel_modify">
+        <div id="container_panel_modify" className={(DarkModeOn === "true")? "container_panel_modify darkmode_modify" : "container_panel_modify"}>
           <div id="panel_modify_block" className="panel_modify_block">
             <form className="panel_modify" onSubmit={modifyPost}>
               <div className="header_panel">
@@ -979,7 +979,7 @@ function Home_Panel() {
             </form>
           </div>
         </div>
-        <div id="container_panel_commentary" className="container_panel_commentary">
+        <div id="container_panel_commentary" className={(DarkModeOn === "true")? "container_panel_commentary darkmode_comment" : "container_panel_commentary"}>
           <div id="panel_commentary_block" className="panel_commentary_block">
             <form className="panel_commentary" onSubmit={sendCommentary}>
               <div className="header_panel">
@@ -1010,10 +1010,10 @@ function Home_Panel() {
           </div>
         </div>
         <div id="container_panel_profil" className="container_panel_profil">
-          <div id="panel_profil_block" className="panel_profil_block">
+          <div id="panel_profil_block" className={(DarkModeOn === "true")? "panel_profil_block darkmode" : "panel_profil_block"}>
             <div className="panel_profil">
                 <FontAwesomeIcon icon={faXmark}className="exit_cross" onClick={hidepanelProfil}/>
-                <div className="menu">
+                <div className={(DarkModeOn === "true")? "menu input_darkmode" : "menu"}>
                   <ul>
                     <li id="menu_personnaldata" className="clicked" onClick={menupersonnaldata}>
                       Données personnelles
@@ -1034,38 +1034,38 @@ function Home_Panel() {
                   </div>
                   <img id="profileImg" className="profileImg" src={profile_picture} alt="" />
                   <p id= "profile_firstname_lastname" className="profile_firstname_lastname">{firstname} {lastname}</p>
-                  <div className="input_file_icon_container">
-                    <input className="file_input_icon" type="file" onChange={PostChangeProfilePicture}/>
+                  <div className={(DarkModeOn === "true")? "input_file_icon_container input_darkmode" : "input_file_icon_container"}>
+                    <input className={(DarkModeOn === "true")? "file_input_icon input_darkmode" : "file_input_icon"} type="file" onChange={PostChangeProfilePicture}/>
                     <span id="addimage_text" className="addimage_text">
                       Changer de photo de profil
                     </span>
                   </div>
                 </div>
-                <form className="container_change_personalinformation" onSubmit={PostChangeOnProfil}>
+                <form className={(DarkModeOn === "true")? "container_change_personalinformation darkmode" : "container_change_personalinformation"} onSubmit={PostChangeOnProfil}>
                     <div className="container_change_firstname">
                       <label className="label_firstname" htmlFor="firstname">Prénom</label>
-                      <input id="change_firstname" type="text" className="change_firstname" name="firstname" autoComplete="given-name"/>
+                      <input id="change_firstname" type="text" className={(DarkModeOn === "true")? "change_firstname input_darkmode_text" : "change_firstname"} name="firstname" autoComplete="given-name"/>
                     </div>
                     <div className="container_change_lastname">
                       <label className="label_lastname" htmlFor="lastname">Nom</label>
-                      <input id="change_lastname" type="text" className="change_lastname" name="lastname" autoComplete="family-name"/>
+                      <input id="change_lastname" type="text" className={(DarkModeOn === "true")? "change_lastname input_darkmode_text" : "change_lastname"} name="lastname" autoComplete="family-name"/>
                     </div>
                     <div className="container_confirm_password">
                       <label className="label_confirmpassword" htmlFor="confirmpassword">Mot de passe</label>
-                      <input id="confirmpassword" type="password" className="confirmpassword" name="confirmpassword" required  autoComplete="new-password"/>
+                      <input id="confirmpassword" type="password" className={(DarkModeOn === "true")? "confirmpassword input_darkmode_text" : "confirmpassword"} name="confirmpassword" required  autoComplete="new-password"/>
                     </div>
-                    <button className="button_apply">Appliquer les modifications</button>
+                    <button className={(DarkModeOn === "true")? "button_apply button_darkmode" : "button_apply"}>Appliquer les modifications</button>
                   </form>
-                  <form className="container_change_password" onSubmit={PostChangePassword}>
+                  <form className={(DarkModeOn === "true")? "container_change_password darkmode" : "container_change_password"} onSubmit={PostChangePassword}>
                     <div className="container_oldpassword">
                       <label className="label_oldpassword" htmlFor="oldchange_password" autoComplete="current-password">Mot de passe actuel</label>
-                      <input id="oldpassword" type="password" className="change_oldpassword" name="oldchange_password" />
+                      <input id="oldpassword" type="password" className={(DarkModeOn === "true")? "change_oldpassword input_darkmode_text" : "change_oldpassword"} name="oldchange_password" />
                     </div>
                     <div className="container_newpassword">
                     <label className="label_newpassword" htmlFor="change_newpassword" autoComplete="new-password">Nouveau mot de passe</label>
-                    <input id="newpassword" type="password" className="change_newpassword" name="change_newpassword" />
+                    <input id="newpassword" type="password" className={(DarkModeOn === "true")? "change_newpassword input_darkmode_text" : "change_newpassword"} name="change_newpassword" />
                     </div>
-                    <button className="button_apply_password">Appliquer les modifications</button> 
+                    <button className={(DarkModeOn === "true")? "button_apply_password button_darkmode" : "button_apply_password"}>Appliquer les modifications</button> 
                   </form>
             </div>
           </div>
